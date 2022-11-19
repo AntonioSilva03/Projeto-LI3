@@ -4,6 +4,9 @@
 # Unignore all with extensions
 !*.*
 
+# Unignore the Makefile
+!Makefile
+
 # Unignore all dirs
 !*/
 
@@ -15,3 +18,4 @@ a.out
 *drivers*.csv
 *rides*.csv
 Resultados/
+.vscode/
