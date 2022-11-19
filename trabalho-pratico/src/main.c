@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     parseusers(users, userarray);
     parsedrivers(drivers, driverarray);
     parserides(rides, ridearray);
-    FILE *output = fopen("../Resultados/output.txt", "w");
+    FILE *output = fopen("../trabalho-pratico/Resultados/output.txt", "w");
 
     char line[BUFSIZ];
     FILE *input = fopen(argv[2], "r");
