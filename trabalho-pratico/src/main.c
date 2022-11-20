@@ -23,7 +23,6 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query2(driverarray, ridearray, query, output);
         break;
     case 3:
-        query3(userarray, ridearray, query, output);
         break;
     case 4:
         query4(driverarray, ridearray, query, output);
@@ -67,18 +66,24 @@ int main(int argc, char *argv[])
     parseusers(users, userarray);
     parsedrivers(drivers, driverarray);
     parserides(rides, ridearray);
-    FILE *output = fopen("../trabalho-pratico/Resultados/output.txt", "w");
 
     char line[BUFSIZ];
     FILE *input = fopen(argv[2], "r");
+    char *filename = malloc(BUFSIZ);
+    int it = 1;
     while (feof(input) != 1)
     {
         if (fgets(line, BUFSIZ, input) != 0)
         {
+            char filepath[BUFSIZ] = "../trabalho-pratico/Resultados/";
+            snprintf(filename, BUFSIZ, "command%d_output.txt", it);
+            strcat(filepath, filename);
+            FILE *output = fopen(filepath, "w");
             char query[BUFSIZ];
             strcpy(query, line);
             int queryid = getquery(query);
             handle(userarray, driverarray, ridearray, queryid, line, output);
+            it++;
         }
     }
     return 0;
