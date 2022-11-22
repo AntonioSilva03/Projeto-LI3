@@ -68,6 +68,7 @@ typedef struct
     char *nome;
     char *datarecente;
     double avmedia;
+    char *activity;
 } DRIVERMEDIA;
 
 void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
@@ -81,11 +82,22 @@ void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     {
         avs[i].id = i;
         avs[i + 1].id = i + 1;
+        avs[i].activity = get_accountstatus(NULL, driverarray, i, "driver");
+        avs[i + 1].activity = get_accountstatus(NULL, driverarray, i + 1, "driver");
         avs[i].nome = get_name(NULL, driverarray, i, "driver");
         avs[i + 1].nome = get_name(NULL, driverarray, i + 1, "driver");
         av_media_data_recente(ridearray, i, i + 1, &avs[i].datarecente, &avs[i].avmedia, &avs[i + 1].datarecente, &avs[i + 1].avmedia);
     }
+    int t = 1;
     for (int i = 1; i <= MAX_DRIVER; i++)
+    {
+        if (strcmp(avs[i].activity, "active\n") == 0)
+        {
+            avs[t] = avs[i];
+            t++;
+        }
+    }
+    for (int i = 1; i <= t; i++)
     {
         double tmp = avs[i].avmedia;
         DRIVERMEDIA aux = avs[i];
@@ -95,37 +107,19 @@ void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
             avs[j + 1] = avs[j];
             --j;
         }
-        if (tmp == avs[j].avmedia)
+        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) < 0 && j >= 0)
         {
-            int comparacao = datecomparison(avs[j].datarecente, aux.datarecente);
-            if (comparacao > 0)
-            {
-                avs[j + 1] = aux;
-            }
-            else if (comparacao < 0)
-            {
-                avs[j + 1] = avs[j];
-                avs[j] = aux;
-            }
-            else
-            {
-                if (avs[j].id > aux.id)
-                {
-                    avs[j + 1] = avs[j];
-                    avs[j] = aux;
-                }
-                else
-                {
-                    avs[j + 1] = aux;
-                }
-            }
+            avs[j + 1] = avs[j];
+            --j;
         }
-        else
+        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) == 0 && aux.id > avs[j].id && j >= 0)
         {
-            avs[j + 1] = aux;
+            avs[j + 1] = avs[j];
+            --j;
         }
+        avs[j + 1] = aux;
     }
-    for (int i = MAX_DRIVER; i > MAX_DRIVER - N; i--)
+    for (int i = t; i > t - N; i--)
     {
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
@@ -232,6 +226,7 @@ typedef struct
     int id;
     char *nome;
     double avmedia;
+    char *activity;
 } CITYMEDIA;
 
 typedef struct
@@ -272,6 +267,7 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
         {
             avs[pos2].id = get_driverid(ridearray, cityviagens[i].id);
             avs[pos2].nome = get_name(NULL, driverarray, avs[pos2].id, "driver");
+            avs[pos2].activity = get_accountstatus(NULL, driverarray, avs[pos2].id, "driver");
             media += get_scoredriver(ridearray, cityviagens[i].id);
             cityviagens[i].a = NULL;
             counter = 1;
@@ -291,7 +287,16 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
             pos2++;
         }
     }
+    int pos3 = 0;
     for (int i = 0; i < pos2; i++)
+    {
+        if (strcmp(avs[i].activity, "active\n") == 0)
+        {
+            avs[pos3] = avs[i];
+            pos3++;
+        }
+    }
+    for (int i = 0; i < pos3; i++)
     {
         double tmp = avs[i].avmedia;
         CITYMEDIA aux = avs[i];
@@ -308,7 +313,7 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
         }
         avs[j + 1] = aux;
     }
-    for (int i = pos2 - 1; i >= pos2 - N; i--)
+    for (int i = pos3 - 1; i >= pos3 - N; i--)
     {
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }

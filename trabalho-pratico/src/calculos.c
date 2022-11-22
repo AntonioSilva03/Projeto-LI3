@@ -100,31 +100,45 @@ void av_media_data_recente(RIDE *ridearray, int driver1, int driver2, char **dat
     int counter1 = 0;
     double soma2 = 0;
     int counter2 = 0;
+    *datarecente1 = "01/01/1990";
+    *datarecente2 = "01/01/1990";
     for (int i = 1; i <= MAX_RIDE; i += 2)
     {
         if (get_driverid(ridearray, i) == driver1)
         {
             soma1 += get_scoredriver(ridearray, i);
             counter1++;
-            *datarecente1 = get_date(ridearray, i);
+            if (datecomparison(*datarecente1, get_date(ridearray, i)) > 0)
+            {
+                *datarecente1 = get_date(ridearray, i);
+            }
         }
         else if (get_driverid(ridearray, i) == driver2)
         {
             soma2 += get_scoredriver(ridearray, i);
             counter2++;
-            *datarecente2 = get_date(ridearray, i);
+            if (datecomparison(*datarecente2, get_date(ridearray, i)) > 0)
+            {
+                *datarecente2 = get_date(ridearray, i);
+            }
         }
         if (get_driverid(ridearray, i + 1) == driver1)
         {
             soma1 += get_scoredriver(ridearray, i + 1);
             counter1++;
-            *datarecente1 = get_date(ridearray, i + 1);
+            if (datecomparison(*datarecente1, get_date(ridearray, i + 1)) > 0)
+            {
+                *datarecente1 = get_date(ridearray, i + 1);
+            }
         }
         else if (get_driverid(ridearray, i + 1) == driver2)
         {
             soma2 += get_scoredriver(ridearray, i + 1);
             counter2++;
-            *datarecente2 = get_date(ridearray, i + 1);
+            if (datecomparison(*datarecente2, get_date(ridearray, i + 1)) > 0)
+            {
+                *datarecente2 = get_date(ridearray, i + 1);
+            }
         }
     }
     *avmedia1 = soma1 / counter1;
