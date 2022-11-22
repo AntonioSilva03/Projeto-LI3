@@ -301,20 +301,12 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
             avs[j + 1] = avs[j];
             --j;
         }
-        if (tmp == avs[j].avmedia)
+        while (tmp == avs[j].avmedia && aux.id < avs[j].id && j >= 0)
         {
-            if (aux.id < avs[j].id)
-            {
-                avs[j + 1] = avs[j];
-                avs[j] = aux;
-            }
-            else
-                avs[j + 1] = aux;
+            avs[j + 1] = avs[j];
+            --j;
         }
-        else
-        {
-            avs[j + 1] = aux;
-        }
+        avs[j + 1] = aux;
     }
     for (int i = pos2 - 1; i >= pos2 - N; i--)
     {
