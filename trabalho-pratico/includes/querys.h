@@ -12,5 +12,6 @@ void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
 void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
 void query6(RIDE *ridearray, char query[], FILE *output);
 void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
+void query9(RIDE *ridearray, char query[], FILE *output);
 
 #endif

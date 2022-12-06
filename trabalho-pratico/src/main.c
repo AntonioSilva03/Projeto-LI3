@@ -38,6 +38,8 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         break;
     case 8:
         break;
+    case 9:
+        query9(ridearray, query, output);
     default:
         break;
     }

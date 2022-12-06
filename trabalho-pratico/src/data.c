@@ -252,7 +252,7 @@ void parserides(FILE *rides, RIDE *ridesarray)
 char *get_username(USER *userarray, int pos) //user
 {
     char *username;
-    username = userarray[pos]->username;
+    username = strdup(userarray[pos]->username);
     return username;
 }
 char *get_name(USER *userarray, DRIVER *driverarray, int pos, char *type) //user and driver
@@ -260,11 +260,11 @@ char *get_name(USER *userarray, DRIVER *driverarray, int pos, char *type) //user
     char *name;
     if (strcmp(type, "driver") == 0)
     {
-        name = driverarray[pos]->name;
+        name = strdup(driverarray[pos]->name);
     }
     else
     {
-        name = userarray[pos]->name;
+        name = strdup(userarray[pos]->name);
     }
     return name;
 }
@@ -286,11 +286,11 @@ char *get_birthdate(USER *userarray, DRIVER *driverarray, int pos, char *type) /
     char *birthdate;
     if (strcmp(type, "driver") == 0)
     {
-        birthdate = driverarray[pos]->birthdate;
+        birthdate = strdup(driverarray[pos]->birthdate);
     }
     else
     {
-        birthdate = userarray[pos]->birthdate;
+        birthdate = strdup(userarray[pos]->birthdate);
     }
     return birthdate;
 }
@@ -299,18 +299,18 @@ char *get_accountcreation(USER *userarray, DRIVER *driverarray, int pos, char *t
     char *acccreation;
     if (strcmp(type, "driver") == 0)
     {
-        acccreation = driverarray[pos]->accountcreation;
+        acccreation = strdup(driverarray[pos]->accountcreation);
     }
     else
     {
-        acccreation = userarray[pos]->accountcreation;
+        acccreation = strdup(userarray[pos]->accountcreation);
     }
     return acccreation;
 }
 char *get_paymethod(USER *userarray, int pos) //user
 {
     char *paymethod;
-    paymethod = userarray[pos]->paymethod;
+    paymethod = strdup(userarray[pos]->paymethod);
     return paymethod;
 }
 char *get_accountstatus(USER *userarray, DRIVER *driverarray, int pos, char *type) //user and driver
@@ -318,11 +318,11 @@ char *get_accountstatus(USER *userarray, DRIVER *driverarray, int pos, char *typ
     char *accstatus;
     if (strcmp(type, "driver") == 0)
     {
-        accstatus = driverarray[pos]->accountstatus;
+        accstatus = strdup(driverarray[pos]->accountstatus);
     }
     else
     {
-        accstatus = userarray[pos]->accountstatus;
+        accstatus = strdup(userarray[pos]->accountstatus);
     }
     return accstatus;
 }
@@ -342,13 +342,13 @@ int get_id(DRIVER *driverarray, RIDE *ridearray, int pos, char *type) //driver a
 char *get_carclass(DRIVER *driverarray, int pos) //driver
 {
     char *carcalss;
-    carcalss = driverarray[pos]->car_class;
+    carcalss = strdup(driverarray[pos]->car_class);
     return carcalss;
 }
 char *get_licenseplate(DRIVER *driverarray, int pos) //driver
 {
     char *licenseplate;
-    licenseplate = driverarray[pos]->licenseplate;
+    licenseplate = strdup(driverarray[pos]->licenseplate);
     return licenseplate;
 }
 char *get_city(DRIVER *driverarray, RIDE *ridearray, int pos, char *type) //driver and rides
@@ -356,18 +356,18 @@ char *get_city(DRIVER *driverarray, RIDE *ridearray, int pos, char *type) //driv
     char *city;
     if (strcmp(type, "driver") == 0)
     {
-        city = driverarray[pos]->city;
+        city = strdup(driverarray[pos]->city);
     }
     else
     {
-        city = ridearray[pos]->city;
+        city = strdup(ridearray[pos]->city);
     }
     return city;
 }
 char *get_date(RIDE *ridearray, int pos) //ride
 {
     char *date;
-    date = ridearray[pos]->date;
+    date = strdup(ridearray[pos]->date);
     return date;
 }
 int get_driverid(RIDE *ridearray, int pos) //ride
@@ -379,7 +379,7 @@ int get_driverid(RIDE *ridearray, int pos) //ride
 char *get_user(RIDE *ridearray, int pos) //ride
 {
     char *user;
-    user = ridearray[pos]->user;
+    user = strdup(ridearray[pos]->user);
     return user;
 }
 int get_distance(RIDE *ridearray, int pos) //ride
@@ -409,6 +409,6 @@ double get_tip(RIDE *ridearray, int pos) //ride
 char *get_comment(RIDE *ridearray, int pos) //ride
 {
     char *comment;
-    comment = ridearray[pos]->comment;
+    comment = strdup(ridearray[pos]->comment);
     return comment;
 }

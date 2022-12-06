@@ -318,3 +318,48 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
 }
+
+void query9(RIDE *ridearray, char query[], FILE *output)
+{
+    strtok(query, " ");
+    char *data1 = strtok(NULL, " ");
+    char *data2 = strtok(NULL, "\n");
+    RIDE2 *ridecity = malloc(sizeof *ridecity * MAX_RIDE);
+    int pos = 0;
+    for (int i = 1; i <= MAX_RIDE; i++)
+    {
+        char *dataat = get_date(ridearray, i);
+        if (datecomparison(dataat, data1) <= 0 && datecomparison(dataat, data2) >= 0 && get_tip(ridearray, i) > 0)
+        {
+            ridecity[pos].id = i;
+            ridecity[pos].a = ridearray[i];
+            pos++;
+        }
+    }
+    for (int i = 0; i < pos; i++)
+    {
+        int tmp = get_distance(ridearray, ridecity[i].id);
+        RIDE2 aux = ridecity[i];
+        int j = i - 1;
+        while (tmp > get_distance(ridearray, ridecity[j].id))
+        {
+            ridecity[j + 1] = ridecity[j];
+            --j;
+        }
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(get_date(ridearray, ridecity[j].id), get_date(ridearray, aux.id)) > 0)
+        {
+            ridecity[j + 1] = ridecity[j];
+            --j;
+        }
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(get_date(ridearray, ridecity[j].id), get_date(ridearray, aux.id)) == 0 && aux.id > ridecity[j].id)
+        {
+            ridecity[j + 1] = ridecity[j];
+            --j;
+        }
+        ridecity[j + 1] = aux;
+    }
+    for (int i = 0; i < pos; i++)
+    {
+        fprintf(output, "%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_city(NULL, ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
+    }
+}
