@@ -3,7 +3,10 @@
 #include <string.h>
 #include "../includes/queryscheck.h"
 #include "../includes/querys.h"
-#include "../includes/data.h"
+#include "../includes/parseusers.h"
+#include "../includes/parsedrivers.h"
+#include "../includes/parserides.h"
+//#include "../includes/data.h"
 
 void query1check(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {

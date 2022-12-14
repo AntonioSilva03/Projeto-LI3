@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../includes/data.h"
+//#include "../includes/data.h"
+#include "../includes/parseusers.h"
+#include "../includes/parsedrivers.h"
+#include "../includes/parserides.h"
 #include "../includes/queryscheck.h"
 #include "../includes/querys.h"
 

@@ -2,7 +2,10 @@
 #define querys_h
 #include <stdio.h>
 #include <stdlib.h>
-#include "data.h"
+#include "parseusers.h"
+#include "parsedrivers.h"
+#include "parserides.h"
+//#include "data.h"
 
 void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID, FILE *output);
 void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output);

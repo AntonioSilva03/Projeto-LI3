@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../includes/querys.h"
-#include "../includes/data.h"
+//#include "../includes/data.h"
+#include "../includes/parseusers.h"
+#include "../includes/parsedrivers.h"
+#include "../includes/parserides.h"
+#include "../includes/getuserdata.h"
+#include "../includes/getdriverdata.h"
+#include "../includes/getridedata.h"
 #include "../includes/calculos.h"
 
 void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID, FILE *output)
@@ -18,14 +24,14 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
     for (int i = 1; i <= MAX_USER; i++)
     {
         username = get_username(userarray, i);
-        activity = strtok(get_accountstatus(userarray, NULL, i, "user"), "\n");
+        activity = strtok(get_accountstatususer(userarray, i, "user"), "\n");
         if (strcmp(ID, username) == 0)
         {
             if (strcmp(activity, "active") == 0)
             {
-                nome = get_name(userarray, NULL, i, "user");
-                gender = get_gender(userarray, NULL, i, "user");
-                idadee = idade(get_birthdate(userarray, NULL, i, "user"));
+                nome = get_nameuser(userarray, i, "user");
+                gender = get_genderuser(userarray, i, "user");
+                idadee = idade(get_birthdateuser(userarray, i, "user"));
                 avmedia = av_mediauser(ridearray, username);
                 numviagens = num_viagensuser(ridearray, username);
                 totalgasto = total_gasto(driverarray, ridearray, username);
@@ -45,14 +51,14 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
     char *activity;
     for (int i = 1; i <= MAX_DRIVER; i++)
     {
-        if (get_id(driverarray, NULL, i, "driver") == id)
+        if (get_iddriver(driverarray, i, "driver") == id)
         {
-            activity = strtok(get_accountstatus(NULL, driverarray, i, "driver"), "\n");
+            activity = strtok(get_accountstatusdriver(driverarray, i, "driver"), "\n");
             if (strcmp(activity, "active") == 0)
             {
-                nome = get_name(NULL, driverarray, i, "driver");
-                gender = get_gender(NULL, driverarray, i, "driver");
-                idadee = idade(get_birthdate(NULL, driverarray, i, "driver"));
+                nome = get_namedriver(driverarray, i, "driver");
+                gender = get_genderdriver(driverarray, i, "driver");
+                idadee = idade(get_birthdatedriver(driverarray, i, "driver"));
                 avmedia = av_mediadriver(ridearray, i);
                 numviagens = num_viagensdriver(ridearray, i);
                 totalauferido = total_auferido(driverarray, ridearray, i);
@@ -82,10 +88,10 @@ void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     {
         avs[i].id = i;
         avs[i + 1].id = i + 1;
-        avs[i].activity = get_accountstatus(NULL, driverarray, i, "driver");
-        avs[i + 1].activity = get_accountstatus(NULL, driverarray, i + 1, "driver");
-        avs[i].nome = get_name(NULL, driverarray, i, "driver");
-        avs[i + 1].nome = get_name(NULL, driverarray, i + 1, "driver");
+        avs[i].activity = get_accountstatusdriver(driverarray, i, "driver");
+        avs[i + 1].activity = get_accountstatusdriver(driverarray, i + 1, "driver");
+        avs[i].nome = get_namedriver(driverarray, i, "driver");
+        avs[i + 1].nome = get_namedriver(driverarray, i + 1, "driver");
         av_media_data_recente(ridearray, i, i + 1, &avs[i].datarecente, &avs[i].avmedia, &avs[i + 1].datarecente, &avs[i + 1].avmedia);
     }
     int t = 1;
@@ -147,7 +153,7 @@ void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
     {
         disttot = 0;
         dist[pos].username = get_username(userarray, i);
-        dist[pos].nome = get_name(userarray, NULL, i, "user");
+        dist[pos].nome = get_nameuser(userarray, i, "user");
         for (int j = 1; j <= MAX_RIDE; j++)
         {
             if (rideaux[j] != NULL)
@@ -211,7 +217,7 @@ void query6(RIDE *ridearray, char query[], FILE *output)
     data2 = strtok(NULL, "\n");
     for (int i = 1; i < MAX_RIDE; i++)
     {
-        if (strcmp(get_city(NULL, ridearray, i, "ride"), city) == 0 && datecomparison(data1, get_date(ridearray, i)) >= 0 && datecomparison(data2, get_date(ridearray, i)) <= 0)
+        if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0 && datecomparison(data1, get_date(ridearray, i)) >= 0 && datecomparison(data2, get_date(ridearray, i)) <= 0)
         {
             soma += get_distance(ridearray, i);
             counter++;
@@ -249,7 +255,7 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     int pos = 0;
     for (int i = 1; i <= MAX_RIDE; i++)
     {
-        if (strcmp(get_city(NULL, ridearray, i, "ride"), city) == 0)
+        if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
         {
             cityviagens[pos].id = i;
             cityviagens[pos].a = ridearray[i];
@@ -266,8 +272,8 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
         if (cityviagens[i].a != NULL)
         {
             avs[pos2].id = get_driverid(ridearray, cityviagens[i].id);
-            avs[pos2].nome = get_name(NULL, driverarray, avs[pos2].id, "driver");
-            avs[pos2].activity = get_accountstatus(NULL, driverarray, avs[pos2].id, "driver");
+            avs[pos2].nome = get_namedriver(driverarray, avs[pos2].id, "driver");
+            avs[pos2].activity = get_accountstatusdriver(driverarray, avs[pos2].id, "driver");
             media += get_scoredriver(ridearray, cityviagens[i].id);
             cityviagens[i].a = NULL;
             counter = 1;
@@ -360,6 +366,6 @@ void query9(RIDE *ridearray, char query[], FILE *output)
     }
     for (int i = 0; i < pos; i++)
     {
-        fprintf(output, "%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_city(NULL, ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
+        fprintf(output, "%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_cityride(ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
     }
 }

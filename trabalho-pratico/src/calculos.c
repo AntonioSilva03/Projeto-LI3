@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../includes/data.h"
+//#include "../includes/data.h"
+#include "../includes/parseusers.h"
+#include "../includes/parsedrivers.h"
+#include "../includes/parserides.h"
+#include "../includes/getuserdata.h"
+#include "../includes/getdriverdata.h"
+#include "../includes/getridedata.h"
 #include "../includes/calculos.h"
 
 int idade(char *bdate) // q1
@@ -267,7 +273,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     {
         for (int i = 1; i <= MAX_RIDE; i++)
         {
-            if (strcmp(get_city(NULL, ridearray, i, "ride"), city) == 0)
+            if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
             {
                 soma += precoviagem(driverarray, get_driverid(ridearray, i), get_distance(ridearray, i));
                 counter++;
@@ -293,7 +299,7 @@ double av_mediadrivercity(RIDE *ridearray, int driver, char *city) // q7
     int counter = 0;
     for (int i = 1; i <= MAX_RIDE; i++)
     {
-        if (get_driverid(ridearray, i) == driver && strcmp(get_city(NULL, ridearray, i, "ride"), city) == 0)
+        if (get_driverid(ridearray, i) == driver && strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
         {
             soma += get_scoredriver(ridearray, i);
             counter++;
