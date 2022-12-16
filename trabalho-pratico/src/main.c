@@ -7,6 +7,7 @@
 #include "../includes/parserides.h"
 #include "../includes/queryscheck.h"
 #include "../includes/querys.h"
+#include "../includes/structsaux.h"
 
 int getquery(char query[])
 {
@@ -15,7 +16,7 @@ int getquery(char query[])
     sscanf(token, "%d", &queryid);
     return queryid;
 }
-void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output)
+void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, CITYMEDIA *citymedia)
 {
     switch (queryid)
     {
@@ -23,7 +24,7 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query1check(userarray, driverarray, ridearray, query, output);
         break;
     case 2:
-        query2(driverarray, ridearray, query, output);
+        query2(driverarray, ridearray, query, output, drivermedia);
         break;
     case 3:
         break;
@@ -37,12 +38,12 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query6(ridearray, query, output);
         break;
     case 7:
-        query7(driverarray, ridearray, query, output);
+        query7(driverarray, ridearray, query, output, citymedia, ride2);
         break;
     case 8:
         break;
     case 9:
-        query9(ridearray, query, output);
+        query9(ridearray, query, output, ride2);
     default:
         break;
     }
@@ -76,6 +77,12 @@ int main(int argc, char *argv[])
     FILE *input = fopen(argv[2], "r");
     char *filename = malloc(BUFSIZ);
     int it = 1;
+
+    DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * MAX_DRIVER);
+    USERDIST *userdist = malloc(sizeof *userdist * MAX_USER);
+    RIDE2 *ride2 = malloc(sizeof *ride2 * MAX_RIDE);
+    CITYMEDIA *citymedia = malloc(sizeof *citymedia * MAX_USER);
+    
     while (feof(input) != 1)
     {
         if (fgets(line, BUFSIZ, input) != 0)
@@ -87,7 +94,7 @@ int main(int argc, char *argv[])
             char query[BUFSIZ];
             strcpy(query, line);
             int queryid = getquery(query);
-            handle(userarray, driverarray, ridearray, queryid, line, output);
+            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, citymedia);
             it++;
         }
     }
