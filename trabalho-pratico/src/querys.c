@@ -39,7 +39,10 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalgasto);
             }
         }
+        free(username);
+        free(activity);
     }
+    fclose(output);
 }
 void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
 {
@@ -65,62 +68,23 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
                 totalauferido = total_auferido(driverarray, ridearray, i);
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalauferido);
             }
+            free(activity);
         }
     }
+    fclose(output);
 }
-void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output, DRIVERMEDIA *avs)
+void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t)
 {
     int N;
     char *ID = strtok(query, " ");
     ID = strtok(NULL, "\n");
     sscanf(ID, "%d", &N);
     // DRIVERMEDIA *avs = malloc(sizeof *avs * MAX_DRIVER);
-    for (int i = 1; i <= MAX_DRIVER; i += 2)
-    {
-        avs[i].id = i;
-        avs[i + 1].id = i + 1;
-        avs[i].activity = get_accountstatusdriver(driverarray, i, "driver");
-        avs[i + 1].activity = get_accountstatusdriver(driverarray, i + 1, "driver");
-        avs[i].nome = get_namedriver(driverarray, i, "driver");
-        avs[i + 1].nome = get_namedriver(driverarray, i + 1, "driver");
-        av_media_data_recente(ridearray, i, i + 1, &avs[i].datarecente, &avs[i].avmedia, &avs[i + 1].datarecente, &avs[i + 1].avmedia);
-    }
-    int t = 1;
-    for (int i = 1; i <= MAX_DRIVER; i++)
-    {
-        if (strcmp(avs[i].activity, "active\n") == 0)
-        {
-            avs[t] = avs[i];
-            t++;
-        }
-    }
-    for (int i = 1; i <= t; i++)
-    {
-        double tmp = avs[i].avmedia;
-        DRIVERMEDIA aux = avs[i];
-        int j = i - 1;
-        while (tmp < avs[j].avmedia && j >= 0)
-        {
-            avs[j + 1] = avs[j];
-            --j;
-        }
-        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) < 0 && j >= 0)
-        {
-            avs[j + 1] = avs[j];
-            --j;
-        }
-        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) == 0 && aux.id > avs[j].id && j >= 0)
-        {
-            avs[j + 1] = avs[j];
-            --j;
-        }
-        avs[j + 1] = aux;
-    }
     for (int i = t; i > t - N; i--)
     {
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
-    avs = NULL;
+    fclose(output);
 }
 void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -168,6 +132,7 @@ void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
     {
         fprintf(output, "%s;%s;%d\n", dist[i].username, dist[i].nome, dist[i].dist);
     }
+    fclose(output);
 }
 void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -179,6 +144,7 @@ void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     {
         fprintf(output, "%.3f\n", precomedio);
     }
+    fclose(output);
 }
 void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -193,6 +159,7 @@ void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     {
         fprintf(output, "%.3f\n", precomedio);
     }
+    fclose(output);
 }
 void query6(RIDE *ridearray, char query[], FILE *output)
 {
@@ -218,69 +185,23 @@ void query6(RIDE *ridearray, char query[], FILE *output)
     {
         fprintf(output, "%.3f\n", distmedia);
     }
+    fclose(output);
 }
-void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output, CITYMEDIA *avs, RIDE2 *cityviagens)
+void query7(FILE *output, CITYMEDIA *avs2 , int N)
 {
-    int N;
-    char *ID;
-    char *city;
-    strtok(query, " ");
-    ID = strtok(NULL, " ");
-    sscanf(ID, "%d", &N);
-    city = strtok(NULL, "\n");
-    // RIDE2 *cityviagens = malloc(sizeof *cityviagens * MAX_RIDE);
-    // CITYMEDIA *avss = malloc(sizeof *avss * MAX_USER);
-    int pos = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
-    {
-        if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
-        {
-            cityviagens[pos].id = i;
-            cityviagens[pos].a = ridearray[i];
-            pos++;
-        }
-    }
-    if (pos == 0)
-    {
-        return;
-    }
+    CITYMEDIA *avs = malloc(sizeof *avs * MAX_DRIVER);
     int pos2 = 0;
-    double media;
-    int counter;
-    for (int i = 0; i < pos; i++)
+    while(avs2[pos2].nome != NULL)
     {
-        media = 0;
-        counter = 0;
-        if (cityviagens[i].a != NULL)
-        {
-            avs[pos2].id = get_driverid(ridearray, cityviagens[i].id);
-            avs[pos2].nome = get_namedriver(driverarray, avs[pos2].id, "driver");
-            avs[pos2].activity = get_accountstatusdriver(driverarray, avs[pos2].id, "driver");
-            media += get_scoredriver(ridearray, cityviagens[i].id);
-            cityviagens[i].a = NULL;
-            counter = 1;
-            for (int j = i + 1; j < pos; j++)
-            {
-                if (cityviagens[j].a != NULL)
-                {
-                    if (get_driverid(ridearray, cityviagens[i].id) == get_driverid(ridearray, cityviagens[j].id))
-                    {
-                        media += get_scoredriver(ridearray, cityviagens[j].id);
-                        cityviagens[j].a = NULL;
-                        counter++;
-                    }
-                }
-            }
-            avs[pos2].avmedia = media / counter;
-            pos2++;
-        }
+        pos2++;
     }
+    pos2--;
     int pos3 = 0;
     for (int i = 0; i < pos2; i++)
     {
-        if (strcmp(avs[i].activity, "active\n") == 0)
+        if (strcmp(avs2[i].activity, "active\n") == 0)
         {
-            avs[pos3] = avs[i];
+            avs[pos3] = avs2[i];
             pos3++;
         }
     }
@@ -306,7 +227,8 @@ void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output, CI
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
     avs = NULL;
-    cityviagens = NULL;
+    fclose(output);
+    free(avs);
 }
 
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
@@ -314,7 +236,6 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     strtok(query, " ");
     char *data1 = strtok(NULL, " ");
     char *data2 = strtok(NULL, "\n");
-    // RIDE2 *ridecity = malloc(sizeof *ridecity * MAX_RIDE);
     int pos = 0;
     for (int i = 1; i <= MAX_RIDE; i++)
     {
@@ -325,6 +246,7 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
             ridecity[pos].a = ridearray[i];
             pos++;
         }
+        free(dataat);
     }
     if (pos == 0)
     {
@@ -357,4 +279,5 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
         fprintf(output, "%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_cityride(ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
     }
     ridecity = NULL;
+    fclose(output);
 }

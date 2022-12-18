@@ -10,12 +10,12 @@
 
 void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID, FILE *output);
 void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output);
-void query2(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output, DRIVERMEDIA *drivermedia);
+void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t);
 void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output);
 void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
 void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
 void query6(RIDE *ridearray, char query[], FILE *output);
-void query7(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output, CITYMEDIA *citymedia, RIDE2 *ride2);
+void query7(FILE *output, CITYMEDIA *avs , int N);
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ride2);
 
 #endif

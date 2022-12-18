@@ -4,7 +4,7 @@ CFLAGS=-Wall -Iinclude `pkg-config --cflags glib-2.0`
 
 LDFLAGS=`pkg-config --libs glib-2.0` -lm
 
-programa-principal: src/main.o src/calculos.o src/querys.o src/queryscheck.o src/getdriverdata.o src/getridedata.o src/getuserdata.o src/parsedrivers.o src/parserides.o src/parseusers.o
+programa-principal: src/main.o src/calculos.o src/querys.o src/queryscheck.o src/getdriverdata.o src/getridedata.o src/getuserdata.o src/parsedrivers.o src/parserides.o src/parseusers.o src/estatisticas.o
 	$(CC) $^ $(LDFLAGS) -o $@
 
 src/main.o: src/main.c
@@ -26,6 +26,8 @@ src/parsedrivers.o : src/parsedrivers.c
 src/parserides.o : src/parserides.c
 
 src/parseusers.o : src/parseusers.c
+
+src/estatisticas.o : src/estatisticas.c
 
 PASTA = Resultados
 build_folder := $(shell mkdir -p $(PASTA))

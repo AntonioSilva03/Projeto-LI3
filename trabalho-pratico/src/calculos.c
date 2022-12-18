@@ -44,12 +44,14 @@ int datecomparison(char *date1, char *date2) // q2
     sscanf(strtok(datea, "/"), "%d", &dia1);
     sscanf(strtok(NULL, "/"), "%d", &mes1);
     sscanf(strtok(NULL, "/"), "%d", &ano1);
+    free(datea);
     int dia2;
     int mes2;
     int ano2;
     sscanf(strtok(dateb, "/"), "%d", &dia2);
     sscanf(strtok(NULL, "/"), "%d", &mes2);
     sscanf(strtok(NULL, "/"), "%d", &ano2);
+    free(dateb);
     if (ano2 - ano1 > 0)
         res = 1;
     else if (ano2 - ano1 < 0)
@@ -78,11 +80,13 @@ double av_mediauser(RIDE *ridearray, char *username) // q1
     int counter = 0;
     for (int i = 1; i <= MAX_RIDE; i++)
     {
-        if (strcmp(get_user(ridearray, i), username) == 0)
+        char *useraux = get_user(ridearray, i);
+        if (strcmp(useraux, username) == 0)
         {
             soma += get_scoreuser(ridearray, i);
             counter++;
         }
+        free(useraux);
     }
     return soma / counter;
 }
@@ -179,7 +183,8 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
     int kmviagem;
     for (int i = 1; i <= MAX_RIDE; i++)
     {
-        if (strcmp(get_user(ridearray, i), username) == 0)
+        char *useraux = get_user(ridearray, i);
+        if (strcmp(useraux, username) == 0)
         {
             driver = get_driverid(ridearray, i);
             kmviagem = get_distance(ridearray, i);
@@ -198,7 +203,9 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
                 total += 5.20 + (0.94 * kmviagem);
             }
         }
+        free(useraux);
     }
+    free(carclass);
     return total + tottip;
 }
 double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
@@ -227,6 +234,7 @@ double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
             }
         }
     }
+    free(carclass);
     return total + tottip;
 }
 int dist_total(RIDE *ridearray, char *username) // q3
@@ -245,6 +253,7 @@ int dist_total(RIDE *ridearray, char *username) // q3
             }
         }
     }
+    free(user);
     return disttot;
 }
 double precoviagem(DRIVER *driverarray, int driverid, int dist) // q4
@@ -263,6 +272,7 @@ double precoviagem(DRIVER *driverarray, int driverid, int dist) // q4
     {
         preco = 5.20 + (0.94 * dist);
     }
+    free(carclass);
     return preco;
 }
 double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1, char *data2) // q4 e q5
@@ -273,22 +283,26 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     {
         for (int i = 1; i <= MAX_RIDE; i++)
         {
-            if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
+            char *cityaux = get_cityride(ridearray, i, "ride");
+            if (strcmp(cityaux, city) == 0)
             {
                 soma += precoviagem(driverarray, get_driverid(ridearray, i), get_distance(ridearray, i));
                 counter++;
             }
+            free(cityaux);
         }
     }
     else if (city == NULL)
     {
         for (int i = 1; i <= MAX_RIDE; i++)
         {
-            if (datecomparison(data1, get_date(ridearray, i)) >= 0 && datecomparison(data2, get_date(ridearray, i)) <= 0)
+            char *data = get_date(ridearray, i);
+            if (datecomparison(data1, data) >= 0 && datecomparison(data2, data) <= 0)
             {
                 soma += precoviagem(driverarray, get_driverid(ridearray, i), get_distance(ridearray, i));
                 counter++;
             }
+            free(data);
         }
     }
     return soma / counter;
