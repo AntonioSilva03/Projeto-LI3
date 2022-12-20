@@ -37,7 +37,6 @@ int datecomparison(char *date1, char *date2) // q2
 {
     char *datea = strdup(date1);
     char *dateb = strdup(date2);
-    int res;
     int dia1;
     int mes1;
     int ano1;
@@ -53,26 +52,25 @@ int datecomparison(char *date1, char *date2) // q2
     sscanf(strtok(NULL, "/"), "%d", &ano2);
     free(dateb);
     if (ano2 - ano1 > 0)
-        res = 1;
+        return 1;
     else if (ano2 - ano1 < 0)
-        res = -1;
+        return -1;
     else
     {
         if (mes2 - mes1 > 0)
-            res = 1;
+            return 1;
         else if (mes2 - mes1 < 0)
-            res = -1;
+            return -1;
         else
         {
             if (dia2 - dia1 > 0)
-                res = 1;
+                return 1;
             else if (dia2 - dia1 < 0)
-                res = -1;
+                return -1;
             else
-                res = 0;
+                return 0;
         }
     }
-    return res;
 }
 double av_mediauser(RIDE *ridearray, char *username) // q1
 {

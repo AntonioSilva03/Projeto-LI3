@@ -57,7 +57,7 @@ int query2est(DRIVER *driverarray, RIDE *ridearray,  DRIVERMEDIA *avs)
     }
     return t;
 }
-void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs)
+void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
 {
     int poslisboa = 0;
     int posbraga = 0;
@@ -97,11 +97,6 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             possetubal++;
         }
     }
-    avs(driverarray, ridearray, lisboa, lisboaavs, poslisboa);
-    avs(driverarray, ridearray, braga, bragaavs, posbraga);
-    avs(driverarray, ridearray, porto, portoavs, posporto);
-    avs(driverarray, ridearray, faro, faroavs, posfaro);
-    avs(driverarray, ridearray, setubal, setubalavs, possetubal);
 }
 void avs(DRIVER *driverarray, RIDE *ridearray, RIDE2 *cityviagens, CITYMEDIA *avs, int pos)
 {
@@ -124,7 +119,7 @@ void avs(DRIVER *driverarray, RIDE *ridearray, RIDE2 *cityviagens, CITYMEDIA *av
             {
                 if (cityviagens[j].a != NULL)
                 {
-                    if (get_driverid(ridearray, cityviagens[i].id) == get_driverid(ridearray, cityviagens[j].id))
+                    if (avs[pos2].id == get_driverid(ridearray, cityviagens[j].id))
                     {
                         media += get_scoredriver(ridearray, cityviagens[j].id);
                         cityviagens[j].a = NULL;

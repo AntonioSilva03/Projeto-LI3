@@ -17,7 +17,7 @@ int getquery(char query[])
     sscanf(token, "%d", &queryid);
     return queryid;
 }
-void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs)
+void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
 {
     switch (queryid)
     {
@@ -39,7 +39,7 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query6(ridearray, query, output);
         break;
     case 7:
-        query7check(lisboaavs, bragaavs, portoavs, faroavs, setubalavs, query, output);
+        query7check(driverarray, ridearray, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, query, output, lisboa, braga, porto, faro, setubal);
         break;
     case 8:
         break;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
     int sizequery2;
     estatisticas2(driverarray, ridearray, drivermedia, &sizequery2);
-    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, lisboaavs, bragaavs, portoavs, faroavs, setubalavs);
+    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal);
     while (feof(input) != 1)
     {
         if (fgets(line, BUFSIZ, input) != 0)
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
             char query[BUFSIZ];
             strcpy(query, line);
             int queryid = getquery(query);
-            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs);
+            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, lisboa, braga, porto, faro, setubal);
             it++;
         }
     }
