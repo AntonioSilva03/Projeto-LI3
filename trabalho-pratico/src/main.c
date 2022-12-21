@@ -74,11 +74,19 @@ int main(int argc, char *argv[])
     USER *userarray = new_userarray();
     DRIVER *driverarray = new_driverarray();
     RIDE *ridearray = new_ridearray();
+    DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * MAX_DRIVER);
+    for (int i = 1; i <= MAX_DRIVER; i++)
+    {
+        drivermedia[i].id = i;
+        drivermedia[i].datarecente = "01/01/1990";
+        drivermedia[i].somascore = 0;
+        drivermedia[i].nviagens = 0;
+    }
     parseusers(users, userarray);
-    parsedrivers(drivers, driverarray);
-    parserides(rides, ridearray);
     fclose(users);
+    parsedrivers(drivers, driverarray);
     fclose(drivers);
+    parserides(rides, ridearray, drivermedia);
     fclose(rides);
 
     char line[BUFSIZ];
@@ -86,7 +94,6 @@ int main(int argc, char *argv[])
     char *filename = malloc(BUFSIZ);
     int it = 1;
 
-    DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * MAX_DRIVER);
     USERDIST *userdist = malloc(sizeof *userdist * MAX_USER);
     RIDE2 *ride2 = malloc(sizeof *ride2 * MAX_RIDE);
     CITYMEDIA *citymedia = malloc(sizeof *citymedia * MAX_USER);
@@ -134,5 +141,8 @@ int main(int argc, char *argv[])
     free(portoavs);
     free(faroavs);
     free(setubalavs);
+    free(userarray);
+    free(driverarray);
+    free(ridearray);
     return 0;
 }

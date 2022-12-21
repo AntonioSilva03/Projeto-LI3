@@ -6,8 +6,11 @@
 
 typedef struct rides *RIDE;
 
+#include "structsaux.h"
+
 RIDE *new_ridearray();
 
-void parserides(FILE *rides, RIDE *ridearray);
+void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride);
+void parserides(FILE *rides, RIDE *ridearray, DRIVERMEDIA *drivermedia);
 
 #endif

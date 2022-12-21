@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../includes/parserides.h"
+#include "../includes/structsaux.h"
+#include "../includes/calculos.h"
 
 struct rides
 {
@@ -14,16 +16,28 @@ struct rides
     int score_user;
     int score_driver;
     double tip;
-    //char *comment;
+    // char *comment;
 };
 
+void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
+{
+    if (ride->driver <= MAX_DRIVER)
+    {
+        drivermedia[ride->driver].nviagens++;
+        drivermedia[ride->driver].somascore += ride->score_driver;
+        if (datecomparison(drivermedia[ride->driver].datarecente, ride->date) > 0)
+        {
+            drivermedia[ride->driver].datarecente = ride->date;
+        }
+    }
+}
 RIDE *new_ridearray()
 {
     RIDE *ridesarray = malloc(sizeof *ridesarray * MAX_RIDE);
     return ridesarray;
 }
 
-void parserides(FILE *rides, RIDE *ridesarray)
+void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia)
 {
     char str[BUFSIZ];
     int arraypos = 0;
@@ -87,6 +101,7 @@ void parserides(FILE *rides, RIDE *ridesarray)
                 context++;
                 token = strtok(NULL, ";");
             }
+            scoremedia(drivermedia, ride);
             ridesarray[arraypos] = ride;
             arraypos++;
         }

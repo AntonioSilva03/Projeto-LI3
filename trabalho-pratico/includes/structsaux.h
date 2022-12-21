@@ -11,6 +11,8 @@ typedef struct
     int id;
     char *nome;
     char *datarecente;
+    double somascore;
+    int nviagens;
     double avmedia;
     char *activity;
 } DRIVERMEDIA; // query2

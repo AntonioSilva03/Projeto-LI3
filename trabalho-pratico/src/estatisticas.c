@@ -14,15 +14,11 @@
 
 int query2est(DRIVER *driverarray, RIDE *ridearray,  DRIVERMEDIA *avs)
 {
-    for (int i = 1; i <= MAX_DRIVER; i += 2)
+    for (int i = 1; i <= MAX_DRIVER; i++)
     {
-        avs[i].id = i;
-        avs[i + 1].id = i + 1;
+        avs[i].avmedia = avs[i].somascore / avs[i].nviagens;
         avs[i].activity = get_accountstatusdriver(driverarray, i, "driver");
-        avs[i + 1].activity = get_accountstatusdriver(driverarray, i + 1, "driver");
         avs[i].nome = get_namedriver(driverarray, i, "driver");
-        avs[i + 1].nome = get_namedriver(driverarray, i + 1, "driver");
-        av_media_data_recente(ridearray, i, i + 1, &avs[i].datarecente, &avs[i].avmedia, &avs[i + 1].datarecente, &avs[i + 1].avmedia);
     }
     int t = 1;
     for (int i = 1; i <= MAX_DRIVER; i++)
