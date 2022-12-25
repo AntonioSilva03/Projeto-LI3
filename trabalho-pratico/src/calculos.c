@@ -76,7 +76,7 @@ double av_mediauser(RIDE *ridearray, char *username) // q1
 {
     double soma = 0;
     int counter = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         char *useraux = get_user(ridearray, i);
         if (strcmp(useraux, username) == 0)
@@ -92,7 +92,7 @@ double av_mediadriver(RIDE *ridearray, int driver) // q1
 {
     double soma = 0;
     int counter = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (get_driverid(ridearray, i) == driver)
         {
@@ -110,7 +110,7 @@ void av_media_data_recente(RIDE *ridearray, int driver1, int driver2, char **dat
     int counter2 = 0;
     *datarecente1 = "01/01/1990";
     *datarecente2 = "01/01/1990";
-    for (int i = 1; i <= MAX_RIDE; i += 2)
+    for (int i = 1; i <= maxride; i += 2)
     {
         if (get_driverid(ridearray, i) == driver1)
         {
@@ -155,7 +155,7 @@ void av_media_data_recente(RIDE *ridearray, int driver1, int driver2, char **dat
 int num_viagensuser(RIDE *ridearray, char *username) // q1
 {
     int counter = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (strcmp(get_user(ridearray, i), username) == 0)
             counter++;
@@ -165,7 +165,7 @@ int num_viagensuser(RIDE *ridearray, char *username) // q1
 int num_viagensdriver(RIDE *ridearray, int driver) // q1
 {
     int counter = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (get_driverid(ridearray, i) == driver)
             counter++;
@@ -179,7 +179,7 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
     char *carclass;
     int driver;
     int kmviagem;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         char *useraux = get_user(ridearray, i);
         if (strcmp(useraux, username) == 0)
@@ -212,7 +212,7 @@ double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
     double tottip = 0;
     char *carclass = get_carclass(driverarray, driver);
     int kmviagem;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (get_driverid(ridearray, i) == driver)
         {
@@ -239,7 +239,7 @@ int dist_total(RIDE *ridearray, char *username) // q3
 {
     int disttot = 0;
     char *user;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (ridearray[i] != NULL)
         {
@@ -279,7 +279,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     int counter = 0;
     if (data1 == NULL && data2 == NULL)
     {
-        for (int i = 1; i <= MAX_RIDE; i++)
+        for (int i = 1; i <= maxride; i++)
         {
             char *cityaux = get_cityride(ridearray, i, "ride");
             if (strcmp(cityaux, city) == 0)
@@ -292,7 +292,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     }
     else if (city == NULL)
     {
-        for (int i = 1; i <= MAX_RIDE; i++)
+        for (int i = 1; i <= maxride; i++)
         {
             char *data = get_date(ridearray, i);
             if (datecomparison(data1, data) >= 0 && datecomparison(data2, data) <= 0)
@@ -309,7 +309,7 @@ double av_mediadrivercity(RIDE *ridearray, int driver, char *city) // q7
 {
     double soma = 0;
     int counter = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         if (get_driverid(ridearray, i) == driver && strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
         {

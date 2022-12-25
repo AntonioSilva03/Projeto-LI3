@@ -1,8 +1,9 @@
 #ifndef parserides_h
 #define parserides_h
-#define MAX_RIDE 1000000
+//#define MAX_RIDE 1000000
 #include <stdio.h>
 #include <stdlib.h>
+#include "../includes/maxs.h"
 
 typedef struct rides *RIDE;
 

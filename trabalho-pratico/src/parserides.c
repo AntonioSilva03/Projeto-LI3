@@ -21,7 +21,7 @@ struct rides
 
 void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
 {
-    if (ride->driver <= MAX_DRIVER)
+    if (ride->driver <= maxdriver)
     {
         drivermedia[ride->driver].nviagens++;
         drivermedia[ride->driver].somascore += ride->score_driver;
@@ -33,7 +33,7 @@ void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
 }
 RIDE *new_ridearray()
 {
-    RIDE *ridesarray = malloc(sizeof *ridesarray * MAX_RIDE);
+    RIDE *ridesarray = malloc(sizeof *ridesarray * maxride);
     return ridesarray;
 }
 

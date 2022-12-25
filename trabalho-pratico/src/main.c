@@ -9,6 +9,11 @@
 #include "../includes/querys.h"
 #include "../includes/structsaux.h"
 #include "../includes/estatisticas.h"
+#include "../includes/maxs.h"
+
+int maxuser = 100000;
+int maxdriver = 10000;
+int maxride = 1000000;
 
 int getquery(char query[])
 {
@@ -53,6 +58,22 @@ void estatisticas2(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *drivermedi
 {
     *sizequery2 = query2est(driverarray, ridearray, drivermedia);
 }
+int countlines(FILE *fp)
+{
+    int ch = 0;
+    int lines = 0;
+
+    if (fp == NULL)
+        return 0;
+
+    lines++;
+    while ((ch = fgetc(fp)) != EOF)
+    {
+        if (ch == '\n')
+            lines++;
+    }
+    return lines;
+}
 int main(int argc, char *argv[])
 {
     char pathuser[BUFSIZ];
@@ -68,14 +89,23 @@ int main(int argc, char *argv[])
     strcpy(pathride, argv[1]);
     strcat(pathride, fileride);
 
+    FILE *usersaux = fopen(pathuser, "r");
+    int lines = countlines(usersaux);
+    if (lines > maxuser + 2)
+    {
+        maxuser = maxuser * 10;
+        maxdriver = maxdriver * 10;
+        maxride = maxride * 10;
+    }
+    fclose(usersaux);
     FILE *users = fopen(pathuser, "r");
     FILE *drivers = fopen(pathdriver, "r");
     FILE *rides = fopen(pathride, "r");
     USER *userarray = new_userarray();
     DRIVER *driverarray = new_driverarray();
     RIDE *ridearray = new_ridearray();
-    DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * MAX_DRIVER);
-    for (int i = 1; i <= MAX_DRIVER; i++)
+    DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * maxdriver);
+    for (int i = 1; i <= maxdriver; i++)
     {
         drivermedia[i].id = i;
         drivermedia[i].datarecente = "01/01/1990";
@@ -94,20 +124,20 @@ int main(int argc, char *argv[])
     char *filename = malloc(BUFSIZ);
     int it = 1;
 
-    USERDIST *userdist = malloc(sizeof *userdist * MAX_USER);
-    RIDE2 *ride2 = malloc(sizeof *ride2 * MAX_RIDE);
-    CITYMEDIA *citymedia = malloc(sizeof *citymedia * MAX_USER);
+    USERDIST *userdist = malloc(sizeof *userdist * maxuser);
+    RIDE2 *ride2 = malloc(sizeof *ride2 * maxride);
+    CITYMEDIA *citymedia = malloc(sizeof *citymedia * maxuser);
 
-    RIDE2 *lisboa = malloc(sizeof *lisboa * MAX_RIDE);
-    RIDE2 *braga = malloc(sizeof *braga * MAX_RIDE);
-    RIDE2 *porto = malloc(sizeof *porto * MAX_RIDE);
-    RIDE2 *faro = malloc(sizeof *faro * MAX_RIDE);
-    RIDE2 *setubal = malloc(sizeof *setubal * MAX_RIDE);
-    CITYMEDIA *lisboaavs = malloc(sizeof *lisboaavs * MAX_DRIVER);
-    CITYMEDIA *bragaavs = malloc(sizeof *bragaavs * MAX_DRIVER);
-    CITYMEDIA *portoavs = malloc(sizeof *portoavs * MAX_DRIVER);
-    CITYMEDIA *faroavs = malloc(sizeof *faroavs * MAX_DRIVER);
-    CITYMEDIA *setubalavs = malloc(sizeof *setubalavs * MAX_DRIVER);
+    RIDE2 *lisboa = malloc(sizeof *lisboa * maxride);
+    RIDE2 *braga = malloc(sizeof *braga * maxride);
+    RIDE2 *porto = malloc(sizeof *porto * maxride);
+    RIDE2 *faro = malloc(sizeof *faro * maxride);
+    RIDE2 *setubal = malloc(sizeof *setubal * maxride);
+    CITYMEDIA *lisboaavs = malloc(sizeof *lisboaavs * maxdriver);
+    CITYMEDIA *bragaavs = malloc(sizeof *bragaavs * maxdriver);
+    CITYMEDIA *portoavs = malloc(sizeof *portoavs * maxdriver);
+    CITYMEDIA *faroavs = malloc(sizeof *faroavs * maxdriver);
+    CITYMEDIA *setubalavs = malloc(sizeof *setubalavs * maxdriver);
 
     int sizequery2;
     estatisticas2(driverarray, ridearray, drivermedia, &sizequery2);

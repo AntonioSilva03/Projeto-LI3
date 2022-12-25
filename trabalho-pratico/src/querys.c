@@ -22,7 +22,7 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
     double totalgasto;
     char *username;
     char *activity;
-    for (int i = 1; i <= MAX_USER; i++)
+    for (int i = 1; i <= maxuser; i++)
     {
         username = get_username(userarray, i);
         activity = strtok(get_accountstatususer(userarray, i, "user"), "\n");
@@ -53,7 +53,7 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
     int numviagens;
     double totalauferido;
     char *activity;
-    for (int i = 1; i <= MAX_DRIVER; i++)
+    for (int i = 1; i <= maxdriver; i++)
     {
         if (get_iddriver(driverarray, i, "driver") == id)
         {
@@ -92,17 +92,17 @@ void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
     char *ID = strtok(query, " ");
     ID = strtok(NULL, "\n");
     sscanf(ID, "%d", &N);
-    RIDE *rideaux = malloc(sizeof *rideaux * MAX_RIDE);
+    RIDE *rideaux = malloc(sizeof *rideaux * maxride);
     rideaux = ridearray;
-    USERDIST *dist = malloc(sizeof *dist * MAX_USER);
+    USERDIST *dist = malloc(sizeof *dist * maxuser);
     int pos = 1;
     int disttot;
-    for (int i = 1; i <= MAX_USER; i++)
+    for (int i = 1; i <= maxuser; i++)
     {
         disttot = 0;
         dist[pos].username = get_username(userarray, i);
         dist[pos].nome = get_nameuser(userarray, i, "user");
-        for (int j = 1; j <= MAX_RIDE; j++)
+        for (int j = 1; j <= maxride; j++)
         {
             if (rideaux[j] != NULL)
             {
@@ -128,7 +128,7 @@ void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
         }
         dist[j + 1] = aux;
     }
-    for (int i = MAX_USER; i > MAX_USER - N; i--)
+    for (int i = maxuser; i > maxuser - N; i--)
     {
         fprintf(output, "%s;%s;%d\n", dist[i].username, dist[i].nome, dist[i].dist);
     }
@@ -172,7 +172,7 @@ void query6(RIDE *ridearray, char query[], FILE *output)
     city = strtok(NULL, " ");
     data1 = strtok(NULL, " ");
     data2 = strtok(NULL, "\n");
-    for (int i = 1; i < MAX_RIDE; i++)
+    for (int i = 1; i < maxride; i++)
     {
         if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0 && datecomparison(data1, get_date(ridearray, i)) >= 0 && datecomparison(data2, get_date(ridearray, i)) <= 0)
         {
@@ -189,7 +189,7 @@ void query6(RIDE *ridearray, char query[], FILE *output)
 }
 void query7(FILE *output, CITYMEDIA *avs2 , int N)
 {
-    CITYMEDIA *avs = malloc(sizeof *avs * MAX_DRIVER);
+    CITYMEDIA *avs = malloc(sizeof *avs * maxdriver);
     int pos2 = 0;
     while(avs2[pos2].nome != NULL)
     {
@@ -237,7 +237,7 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     char *data1 = strtok(NULL, " ");
     char *data2 = strtok(NULL, "\n");
     int pos = 0;
-    for (int i = 1; i <= MAX_RIDE; i++)
+    for (int i = 1; i <= maxride; i++)
     {
         char *dataat = get_date(ridearray, i);
         if (datecomparison(dataat, data1) <= 0 && datecomparison(dataat, data2) >= 0 && get_tip(ridearray, i) > 0)

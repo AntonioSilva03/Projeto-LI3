@@ -1,8 +1,9 @@
 #ifndef parseusers_h
 #define parseusers_h
-#define MAX_USER 100000
+//#define MAX_USER 100000
 #include <stdio.h>
 #include <stdlib.h>
+#include "../includes/maxs.h"
 
 typedef struct users *USER;
 
