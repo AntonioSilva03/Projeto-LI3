@@ -193,6 +193,7 @@ void query7(FILE *output, CITYMEDIA *avs2 , int N)
     int pos2 = 0;
     while(avs2[pos2].nome != NULL)
     {
+        avs2[pos2].avmedia = avs2[pos2].avmedia / avs2[pos2].nviagens;
         pos2++;
     }
     pos2--;
@@ -210,12 +211,12 @@ void query7(FILE *output, CITYMEDIA *avs2 , int N)
         double tmp = avs[i].avmedia;
         CITYMEDIA aux = avs[i];
         int j = i - 1;
-        while (tmp < avs[j].avmedia && j >= 0)
+        while (j >= 0 && tmp < avs[j].avmedia)
         {
             avs[j + 1] = avs[j];
             --j;
         }
-        while (tmp == avs[j].avmedia && aux.id < avs[j].id && j >= 0)
+        while (j >= 0 && tmp == avs[j].avmedia && aux.id < avs[j].id)
         {
             avs[j + 1] = avs[j];
             --j;

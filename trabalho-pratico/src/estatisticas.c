@@ -94,37 +94,22 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
         }
     }
 }
-void avs(DRIVER *driverarray, RIDE *ridearray, RIDE2 *cityviagens, CITYMEDIA *avs, int pos)
+void avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride)
 {
-    int pos2 = 0;
-    double media;
-    int counter;
-    for (int i = 0; i < pos; i++)
+    int pointer = 0;
+    while (avs[pointer].activity != NULL)
     {
-        media = 0;
-        counter = 0;
-        if (cityviagens[i].a != NULL)
+        if (avs[pointer].id == ride.id)
         {
-            avs[pos2].id = get_driverid(ridearray, cityviagens[i].id);
-            avs[pos2].nome = get_namedriver(driverarray, avs[pos2].id, "driver");
-            avs[pos2].activity = get_accountstatusdriver(driverarray, avs[pos2].id, "driver");
-            media += get_scoredriver(ridearray, cityviagens[i].id);
-            cityviagens[i].a = NULL;
-            counter = 1;
-            for (int j = i + 1; j < pos; j++)
-            {
-                if (cityviagens[j].a != NULL)
-                {
-                    if (avs[pos2].id == get_driverid(ridearray, cityviagens[j].id))
-                    {
-                        media += get_scoredriver(ridearray, cityviagens[j].id);
-                        cityviagens[j].a = NULL;
-                        counter++;
-                    }
-                }
-            }
-            avs[pos2].avmedia = media / counter;
-            pos2++;
+            avs[pointer].avmedia += ride.avmedia;
+            avs[pointer].nviagens++;
+            return;
         }
+        pointer++;
     }
+    avs[pointer].id = ride.id;
+    avs[pointer].nome = get_namedriver(driverarray, avs[pointer].id, "driver");
+    avs[pointer].avmedia = ride.avmedia;
+    avs[pointer].activity = get_accountstatusdriver(driverarray, avs[pointer].id, "driver");
+    avs[pointer].nviagens = 1;
 }

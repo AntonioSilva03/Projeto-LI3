@@ -30,6 +30,7 @@ typedef struct
     char *nome;
     double avmedia;
     char *activity;
+    int nviagens;
 } CITYMEDIA; //query7
 
 typedef struct
