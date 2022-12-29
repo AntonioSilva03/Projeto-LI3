@@ -37,6 +37,7 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
                 numviagens = num_viagensuser(ridearray, username);
                 totalgasto = total_gasto(driverarray, ridearray, username);
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalgasto);
+                free(nome);
             }
         }
         free(username);
@@ -67,6 +68,7 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
                 numviagens = num_viagensdriver(ridearray, i);
                 totalauferido = total_auferido(driverarray, ridearray, i);
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalauferido);
+                free(nome);
             }
             free(activity);
         }
@@ -161,24 +163,25 @@ void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     }
     fclose(output);
 }
-void query6(RIDE *ridearray, char query[], FILE *output)
+void query6(RIDE *ridearray, RIDE2 *cityviagens, char query[], FILE *output)
 {
     double soma = 0, counter = 0;
     double distmedia;
-    char *city;
     char *data1;
     char *data2;
-    strtok(query, " ");
-    city = strtok(NULL, " ");
     data1 = strtok(NULL, " ");
     data2 = strtok(NULL, "\n");
-    for (int i = 1; i < maxride; i++)
+    int pointer = 0;
+    while (cityviagens[pointer].a != NULL)
     {
-        if (strcmp(get_cityride(ridearray, i, "ride"), city) == 0 && datecomparison(data1, get_date(ridearray, i)) >= 0 && datecomparison(data2, get_date(ridearray, i)) <= 0)
+        char *dateaux = get_date(ridearray, cityviagens[pointer].id);
+        if (datecomparison(data1, dateaux) >= 0 && datecomparison(data2, dateaux) <= 0)
         {
-            soma += get_distance(ridearray, i);
+            soma += get_distance(ridearray, cityviagens[pointer].id);
             counter++;
         }
+        free(dateaux);
+        pointer++;
     }
     distmedia = soma / counter;
     if (distmedia == distmedia)
@@ -187,49 +190,18 @@ void query6(RIDE *ridearray, char query[], FILE *output)
     }
     fclose(output);
 }
-void query7(FILE *output, CITYMEDIA *avs2 , int N)
+void query7(FILE *output, CITYMEDIA *avs, int N)
 {
-    CITYMEDIA *avs = malloc(sizeof *avs * maxdriver);
-    int pos2 = 0;
-    while(avs2[pos2].nome != NULL)
+    int pos = 0;
+    while (avs[pos].nome != NULL)
     {
-        avs2[pos2].avmedia = avs2[pos2].avmedia / avs2[pos2].nviagens;
-        pos2++;
+        pos++;
     }
-    pos2--;
-    int pos3 = 0;
-    for (int i = 0; i < pos2; i++)
-    {
-        if (strcmp(avs2[i].activity, "active\n") == 0)
-        {
-            avs[pos3] = avs2[i];
-            pos3++;
-        }
-    }
-    for (int i = 0; i < pos3; i++)
-    {
-        double tmp = avs[i].avmedia;
-        CITYMEDIA aux = avs[i];
-        int j = i - 1;
-        while (j >= 0 && tmp < avs[j].avmedia)
-        {
-            avs[j + 1] = avs[j];
-            --j;
-        }
-        while (j >= 0 && tmp == avs[j].avmedia && aux.id < avs[j].id)
-        {
-            avs[j + 1] = avs[j];
-            --j;
-        }
-        avs[j + 1] = aux;
-    }
-    for (int i = pos3 - 1; i >= pos3 - N; i--)
+    for (int i = pos - 1; i >= pos - N; i--)
     {
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
-    avs = NULL;
     fclose(output);
-    free(avs);
 }
 
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
@@ -240,14 +212,17 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     int pos = 0;
     for (int i = 1; i <= maxride; i++)
     {
-        char *dataat = get_date(ridearray, i);
-        if (datecomparison(dataat, data1) <= 0 && datecomparison(dataat, data2) >= 0 && get_tip(ridearray, i) > 0)
+        if (get_tip(ridearray, i) > 0)
         {
-            ridecity[pos].id = i;
-            ridecity[pos].a = ridearray[i];
-            pos++;
+            char *dataat = get_date(ridearray, i);
+            if (datecomparison(dataat, data1) <= 0 && datecomparison(dataat, data2) >= 0)
+            {
+                ridecity[pos].id = i;
+                ridecity[pos].a = ridearray[i];
+                pos++;
+            }
+            free(dataat);
         }
-        free(dataat);
     }
     if (pos == 0)
     {
@@ -257,23 +232,31 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     {
         int tmp = get_distance(ridearray, ridecity[i].id);
         RIDE2 aux = ridecity[i];
+        char *dateat = get_date(ridearray, aux.id);
         int j = i - 1;
         while (tmp > get_distance(ridearray, ridecity[j].id))
         {
             ridecity[j + 1] = ridecity[j];
             --j;
         }
-        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(get_date(ridearray, ridecity[j].id), get_date(ridearray, aux.id)) > 0)
+        char *dateaux = get_date(ridearray, ridecity[j].id);
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat) > 0)
         {
+            free(dateaux);
             ridecity[j + 1] = ridecity[j];
             --j;
+            dateaux = get_date(ridearray, ridecity[j].id);
         }
-        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(get_date(ridearray, ridecity[j].id), get_date(ridearray, aux.id)) == 0 && aux.id > ridecity[j].id)
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat) == 0 && aux.id > ridecity[j].id)
         {
+            free(dateaux);
             ridecity[j + 1] = ridecity[j];
             --j;
+            dateaux = get_date(ridearray, ridecity[j].id);
         }
         ridecity[j + 1] = aux;
+        free(dateat);
+        free(dateaux);
     }
     for (int i = 0; i < pos; i++)
     {

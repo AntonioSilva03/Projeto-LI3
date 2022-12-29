@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "../includes/data.h"
+// #include "../includes/data.h"
 #include "../includes/parseusers.h"
 #include "../includes/parsedrivers.h"
 #include "../includes/parserides.h"
@@ -157,8 +157,12 @@ int num_viagensuser(RIDE *ridearray, char *username) // q1
     int counter = 0;
     for (int i = 1; i <= maxride; i++)
     {
-        if (strcmp(get_user(ridearray, i), username) == 0)
+        char *user = get_user(ridearray, i);
+        if (strcmp(user, username) == 0)
+        {
             counter++;
+        }
+        free(user);
     }
     return counter;
 }

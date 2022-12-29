@@ -9,6 +9,7 @@
 //#include "data.h"
 
 void query1check(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
+void query6check(RIDE *ridearray, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal);
 void query7check(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga , RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal);
 
 #endif

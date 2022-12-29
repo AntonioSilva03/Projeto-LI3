@@ -14,7 +14,7 @@ void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t);
 void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output);
 void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
 void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output);
-void query6(RIDE *ridearray, char query[], FILE *output);
+void query6(RIDE *ridearray, RIDE2 *cityviagens, char query[], FILE *output);
 void query7(FILE *output, CITYMEDIA *avs , int N);
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ride2);
 

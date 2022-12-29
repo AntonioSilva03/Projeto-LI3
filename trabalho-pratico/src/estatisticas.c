@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
-//#include "../includes/data.h"
+// #include "../includes/data.h"
 #include "../includes/parseusers.h"
 #include "../includes/parsedrivers.h"
 #include "../includes/parserides.h"
@@ -12,7 +12,7 @@
 #include "../includes/calculos.h"
 #include "../includes/estatisticas.h"
 
-int query2est(DRIVER *driverarray, RIDE *ridearray,  DRIVERMEDIA *avs)
+int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
 {
     for (int i = 1; i <= maxdriver; i++)
     {
@@ -53,63 +53,133 @@ int query2est(DRIVER *driverarray, RIDE *ridearray,  DRIVERMEDIA *avs)
     }
     return t;
 }
-void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
+void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs)
 {
     int poslisboa = 0;
     int posbraga = 0;
     int posporto = 0;
     int posfaro = 0;
     int possetubal = 0;
+    CITYMEDIA aux;
     for (int i = 1; i <= maxride; i++)
     {
-        if (strcmp(get_cityride(ridearray, i, "ride"), "Lisboa") == 0)
+        char *city = get_cityride(ridearray, i, "ride");
+        char *activity = get_accountstatusdriver(driverarray, get_driverid(ridearray, i), "driver");
+        if (strcmp(city, "Lisboa") == 0)
         {
             lisboa[poslisboa].id = i;
             lisboa[poslisboa].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, lisboa[poslisboa].id);
+                aux.avmedia = get_scoredriver(ridearray, lisboa[poslisboa].id);
+                avs(driverarray, ridearray, lisboaavs, aux);
+            }
             poslisboa++;
         }
-        else if (strcmp(get_cityride(ridearray, i, "ride"), "Braga") == 0)
+        else if (strcmp(city, "Braga") == 0)
         {
             braga[posbraga].id = i;
             braga[posbraga].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, braga[posbraga].id);
+                aux.avmedia = get_scoredriver(ridearray, braga[posbraga].id);
+                avs(driverarray, ridearray, bragaavs, aux);
+            }
             posbraga++;
         }
-        else if (strcmp(get_cityride(ridearray, i, "ride"), "Porto") == 0)
+        else if (strcmp(city, "Porto") == 0)
         {
             porto[posporto].id = i;
             porto[posporto].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, porto[posporto].id);
+                aux.avmedia = get_scoredriver(ridearray, porto[posporto].id);
+                avs(driverarray, ridearray, portoavs, aux);
+            }
             posporto++;
         }
-        else if (strcmp(get_cityride(ridearray, i, "ride"), "Faro") == 0)
+        else if (strcmp(city, "Faro") == 0)
         {
             faro[posfaro].id = i;
             faro[posfaro].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, faro[posfaro].id);
+                aux.avmedia = get_scoredriver(ridearray, faro[posfaro].id);
+                avs(driverarray, ridearray, faroavs, aux);
+            }
             posfaro++;
         }
-        else if (strcmp(get_cityride(ridearray, i, "ride"), "Setúbal") == 0)
+        else if (strcmp(city, "Setúbal") == 0)
         {
             setubal[possetubal].id = i;
             setubal[possetubal].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, setubal[possetubal].id);
+                aux.avmedia = get_scoredriver(ridearray, setubal[possetubal].id);
+                avs(driverarray, ridearray, setubalavs, aux);
+            }
             possetubal++;
         }
+        free(city);
+        free(activity);
     }
+    calcavs(lisboaavs);
+    calcavs(bragaavs);
+    calcavs(portoavs);
+    calcavs(faroavs);
+    calcavs(setubalavs);
 }
 void avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride)
 {
-    int pointer = 0;
-    while (avs[pointer].activity != NULL)
+    if (avs[ride.id].activity != NULL)
     {
-        if (avs[pointer].id == ride.id)
-        {
-            avs[pointer].avmedia += ride.avmedia;
-            avs[pointer].nviagens++;
-            return;
-        }
-        pointer++;
+        avs[ride.id].avmedia += ride.avmedia;
+        avs[ride.id].nviagens++;
+        return;
     }
-    avs[pointer].id = ride.id;
-    avs[pointer].nome = get_namedriver(driverarray, avs[pointer].id, "driver");
-    avs[pointer].avmedia = ride.avmedia;
-    avs[pointer].activity = get_accountstatusdriver(driverarray, avs[pointer].id, "driver");
-    avs[pointer].nviagens = 1;
+    avs[ride.id].id = ride.id;
+    avs[ride.id].nome = get_namedriver(driverarray, avs[ride.id].id, "driver");
+    avs[ride.id].avmedia = ride.avmedia;
+    avs[ride.id].activity = get_accountstatusdriver(driverarray, avs[ride.id].id, "driver");
+    avs[ride.id].nviagens = 1;
+}
+void calcavs(CITYMEDIA *avs)
+{
+    int ptr = 0;
+    for (int i = 1; i <= maxdriver; i++)
+    {
+        if (avs[i].activity != NULL)
+        {
+            avs[ptr] = avs[i];
+            ptr++;
+        }
+    }
+    int pos = 0;
+    while (avs[pos].nome != NULL)
+    {
+        avs[pos].avmedia = avs[pos].avmedia / avs[pos].nviagens;
+        pos++;
+    }
+    for (int i = 0; i < pos; i++)
+    {
+        double tmp = avs[i].avmedia;
+        CITYMEDIA aux = avs[i];
+        int j = i - 1;
+        while (j >= 0 && tmp < avs[j].avmedia)
+        {
+            avs[j + 1] = avs[j];
+            --j;
+        }
+        while (j >= 0 && tmp == avs[j].avmedia && aux.id < avs[j].id)
+        {
+            avs[j + 1] = avs[j];
+            --j;
+        }
+        avs[j + 1] = aux;
+    }
 }

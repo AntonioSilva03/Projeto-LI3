@@ -41,7 +41,7 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query5(driverarray, ridearray, query, output);
         break;
     case 6:
-        query6(ridearray, query, output);
+        query6check(ridearray, query, output, lisboa, braga, porto, faro, setubal);
         break;
     case 7:
         query7check(driverarray, ridearray, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, query, output, lisboa, braga, porto, faro, setubal);
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
     int sizequery2;
     estatisticas2(driverarray, ridearray, drivermedia, &sizequery2);
-    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal);
+    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, lisboaavs, bragaavs, portoavs, faroavs, setubalavs);
     while (feof(input) != 1)
     {
         if (fgets(line, BUFSIZ, input) != 0)
@@ -171,8 +171,5 @@ int main(int argc, char *argv[])
     free(portoavs);
     free(faroavs);
     free(setubalavs);
-    free(userarray);
-    free(driverarray);
-    free(ridearray);
     return 0;
 }
