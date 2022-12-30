@@ -15,6 +15,7 @@ struct rides
     int score_user;
     int score_driver;
     double tip;
+    double precoviagem;
     //char *comment;
 };
 
@@ -71,4 +72,10 @@ double get_tip(RIDE *ridearray, int pos) //ride
     double tip;
     tip = ridearray[pos]->tip;
     return tip;
+}
+double get_precoviagem(RIDE *ridearray, int pos)
+{
+    double preco;
+    preco = ridearray[pos]->precoviagem;
+    return preco;
 }

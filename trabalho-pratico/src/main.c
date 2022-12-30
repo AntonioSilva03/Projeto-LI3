@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     fclose(users);
     parsedrivers(drivers, driverarray);
     fclose(drivers);
-    parserides(rides, ridearray, drivermedia);
+    parserides(rides, ridearray, drivermedia, driverarray);
     fclose(rides);
 
     char line[BUFSIZ];

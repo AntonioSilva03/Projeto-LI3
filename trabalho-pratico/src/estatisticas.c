@@ -60,6 +60,11 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
     int posporto = 0;
     int posfaro = 0;
     int possetubal = 0;
+    int nlisboa = 0;
+    int nbraga = 0;
+    int nporto = 0;
+    int nfaro = 0;
+    int nsetubal = 0;
     CITYMEDIA aux;
     for (int i = 1; i <= maxride; i++)
     {
@@ -73,7 +78,7 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             {
                 aux.id = get_driverid(ridearray, lisboa[poslisboa].id);
                 aux.avmedia = get_scoredriver(ridearray, lisboa[poslisboa].id);
-                avs(driverarray, ridearray, lisboaavs, aux);
+                nlisboa += avs(driverarray, ridearray, lisboaavs, aux);
             }
             poslisboa++;
         }
@@ -85,7 +90,7 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             {
                 aux.id = get_driverid(ridearray, braga[posbraga].id);
                 aux.avmedia = get_scoredriver(ridearray, braga[posbraga].id);
-                avs(driverarray, ridearray, bragaavs, aux);
+                nbraga += avs(driverarray, ridearray, bragaavs, aux);
             }
             posbraga++;
         }
@@ -97,7 +102,7 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             {
                 aux.id = get_driverid(ridearray, porto[posporto].id);
                 aux.avmedia = get_scoredriver(ridearray, porto[posporto].id);
-                avs(driverarray, ridearray, portoavs, aux);
+                nporto += avs(driverarray, ridearray, portoavs, aux);
             }
             posporto++;
         }
@@ -109,7 +114,7 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             {
                 aux.id = get_driverid(ridearray, faro[posfaro].id);
                 aux.avmedia = get_scoredriver(ridearray, faro[posfaro].id);
-                avs(driverarray, ridearray, faroavs, aux);
+                nfaro += avs(driverarray, ridearray, faroavs, aux);
             }
             posfaro++;
         }
@@ -121,34 +126,35 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             {
                 aux.id = get_driverid(ridearray, setubal[possetubal].id);
                 aux.avmedia = get_scoredriver(ridearray, setubal[possetubal].id);
-                avs(driverarray, ridearray, setubalavs, aux);
+                nsetubal += avs(driverarray, ridearray, setubalavs, aux);
             }
             possetubal++;
         }
         free(city);
         free(activity);
     }
-    calcavs(lisboaavs);
-    calcavs(bragaavs);
-    calcavs(portoavs);
-    calcavs(faroavs);
-    calcavs(setubalavs);
+    calcavs(lisboaavs, nlisboa);
+    calcavs(bragaavs, nbraga);
+    calcavs(portoavs, nporto);
+    calcavs(faroavs, nfaro);
+    calcavs(setubalavs, nsetubal);
 }
-void avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride)
+int avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride)
 {
     if (avs[ride.id].activity != NULL)
     {
         avs[ride.id].avmedia += ride.avmedia;
         avs[ride.id].nviagens++;
-        return;
+        return 0;
     }
     avs[ride.id].id = ride.id;
     avs[ride.id].nome = get_namedriver(driverarray, avs[ride.id].id, "driver");
     avs[ride.id].avmedia = ride.avmedia;
     avs[ride.id].activity = get_accountstatusdriver(driverarray, avs[ride.id].id, "driver");
     avs[ride.id].nviagens = 1;
+    return 1;
 }
-void calcavs(CITYMEDIA *avs)
+void calcavs(CITYMEDIA *avs, int counter)
 {
     int ptr = 0;
     for (int i = 1; i <= maxdriver; i++)
@@ -165,8 +171,13 @@ void calcavs(CITYMEDIA *avs)
         avs[pos].avmedia = avs[pos].avmedia / avs[pos].nviagens;
         pos++;
     }
-    for (int i = 0; i < pos; i++)
+    for (int i = 0; i < maxdriver; i++)
     {
+        if (i > counter)
+        {
+            avs[i].nome = NULL;
+            continue;
+        }
         double tmp = avs[i].avmedia;
         CITYMEDIA aux = avs[i];
         int j = i - 1;

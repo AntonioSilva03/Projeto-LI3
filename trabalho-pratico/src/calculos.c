@@ -288,7 +288,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
             char *cityaux = get_cityride(ridearray, i, "ride");
             if (strcmp(cityaux, city) == 0)
             {
-                soma += precoviagem(driverarray, get_driverid(ridearray, i), get_distance(ridearray, i));
+                soma += get_precoviagem(ridearray, i);
                 counter++;
             }
             free(cityaux);
@@ -301,7 +301,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
             char *data = get_date(ridearray, i);
             if (datecomparison(data1, data) >= 0 && datecomparison(data2, data) <= 0)
             {
-                soma += precoviagem(driverarray, get_driverid(ridearray, i), get_distance(ridearray, i));
+                soma += get_precoviagem(ridearray, i);
                 counter++;
             }
             free(data);

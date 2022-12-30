@@ -16,6 +16,7 @@ struct rides
     int score_user;
     int score_driver;
     double tip;
+    double precoviagem;
     // char *comment;
 };
 
@@ -37,7 +38,7 @@ RIDE *new_ridearray()
     return ridesarray;
 }
 
-void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia)
+void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER *driverarray)
 {
     char str[BUFSIZ];
     int arraypos = 0;
@@ -100,6 +101,10 @@ void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia)
                 }
                 context++;
                 token = strtok(NULL, ";");
+            }
+            if (arraypos > 0)
+            {
+                ride->precoviagem = precoviagem(driverarray, ride->driver, ride->distance);
             }
             scoremedia(drivermedia, ride);
             ridesarray[arraypos] = ride;

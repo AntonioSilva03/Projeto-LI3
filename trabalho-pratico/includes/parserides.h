@@ -12,6 +12,6 @@ typedef struct rides *RIDE;
 RIDE *new_ridearray();
 
 void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride);
-void parserides(FILE *rides, RIDE *ridearray, DRIVERMEDIA *drivermedia);
+void parserides(FILE *rides, RIDE *ridearray, DRIVERMEDIA *drivermedia, DRIVER *driverarray);
 
 #endif

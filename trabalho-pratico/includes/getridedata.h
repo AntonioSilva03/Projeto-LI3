@@ -11,6 +11,7 @@ int get_distance(RIDE *ridearray, int pos); //ride
 int get_scoreuser(RIDE *ridearray, int pos); //ride
 int get_scoredriver(RIDE *ridearray, int pos); //ride
 double get_tip(RIDE *ridearray, int pos); //ride
+double get_precoviagem(RIDE *ridearray, int pos);
 //char *get_comment(RIDE *ridearray, int pos); //ride
 
 #endif

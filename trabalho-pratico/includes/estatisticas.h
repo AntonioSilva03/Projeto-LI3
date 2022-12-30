@@ -9,7 +9,7 @@
 
 int query2est(DRIVER *driverarray, RIDE *ridearray,  DRIVERMEDIA *avs);
 void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs);
-void avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride);
-void calcavs(CITYMEDIA *avs);
+int avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride);
+void calcavs(CITYMEDIA *avs, int counter);
 
 #endif
