@@ -33,42 +33,76 @@ int idade(char *bdate) // q1
     }
     return res;
 }
-int datecomparison(char *date1, char *date2) // q2
+int datecomparison(char *date1, char *date2, int dia, int mes, int ano) // q2
 {
-    char *datea = strdup(date1);
-    char *dateb = strdup(date2);
-    int dia1;
-    int mes1;
-    int ano1;
-    sscanf(strtok(datea, "/"), "%d", &dia1);
-    sscanf(strtok(NULL, "/"), "%d", &mes1);
-    sscanf(strtok(NULL, "/"), "%d", &ano1);
-    free(datea);
-    int dia2;
-    int mes2;
-    int ano2;
-    sscanf(strtok(dateb, "/"), "%d", &dia2);
-    sscanf(strtok(NULL, "/"), "%d", &mes2);
-    sscanf(strtok(NULL, "/"), "%d", &ano2);
-    free(dateb);
-    if (ano2 - ano1 > 0)
-        return 1;
-    else if (ano2 - ano1 < 0)
-        return -1;
-    else
+    if (date1 == NULL)
     {
-        if (mes2 - mes1 > 0)
+        char *dateb = strdup(date2);
+        int dia1;
+        int mes1;
+        int ano1;
+        sscanf(strtok(dateb, "/"), "%d", &dia1);
+        sscanf(strtok(NULL, "/"), "%d", &mes1);
+        sscanf(strtok(NULL, "/"), "%d", &ano1);
+        free(dateb);
+        if (ano1 - ano > 0)
             return 1;
-        else if (mes2 - mes1 < 0)
+        else if (ano1 - ano < 0)
             return -1;
         else
         {
-            if (dia2 - dia1 > 0)
+            if (mes1 - mes > 0)
                 return 1;
-            else if (dia2 - dia1 < 0)
+            else if (mes1 - mes < 0)
                 return -1;
             else
-                return 0;
+            {
+                if (dia1 - dia > 0)
+                    return 1;
+                else if (dia1 - dia < 0)
+                    return -1;
+                else
+                    return 0;
+            }
+        }
+    }
+    else
+    {
+        char *datea = strdup(date1);
+        char *dateb = strdup(date2);
+        int dia1;
+        int mes1;
+        int ano1;
+        sscanf(strtok(datea, "/"), "%d", &dia1);
+        sscanf(strtok(NULL, "/"), "%d", &mes1);
+        sscanf(strtok(NULL, "/"), "%d", &ano1);
+        free(datea);
+        int dia2;
+        int mes2;
+        int ano2;
+        sscanf(strtok(dateb, "/"), "%d", &dia2);
+        sscanf(strtok(NULL, "/"), "%d", &mes2);
+        sscanf(strtok(NULL, "/"), "%d", &ano2);
+        free(dateb);
+        if (ano2 - ano1 > 0)
+            return 1;
+        else if (ano2 - ano1 < 0)
+            return -1;
+        else
+        {
+            if (mes2 - mes1 > 0)
+                return 1;
+            else if (mes2 - mes1 < 0)
+                return -1;
+            else
+            {
+                if (dia2 - dia1 > 0)
+                    return 1;
+                else if (dia2 - dia1 < 0)
+                    return -1;
+                else
+                    return 0;
+            }
         }
     }
 }
@@ -101,56 +135,6 @@ double av_mediadriver(RIDE *ridearray, int driver) // q1
         }
     }
     return soma / counter;
-}
-void av_media_data_recente(RIDE *ridearray, int driver1, int driver2, char **datarecente1, double *avmedia1, char **datarecente2, double *avmedia2)
-{
-    double soma1 = 0;
-    int counter1 = 0;
-    double soma2 = 0;
-    int counter2 = 0;
-    *datarecente1 = "01/01/1990";
-    *datarecente2 = "01/01/1990";
-    for (int i = 1; i <= maxride; i += 2)
-    {
-        if (get_driverid(ridearray, i) == driver1)
-        {
-            soma1 += get_scoredriver(ridearray, i);
-            counter1++;
-            if (datecomparison(*datarecente1, get_date(ridearray, i)) > 0)
-            {
-                *datarecente1 = get_date(ridearray, i);
-            }
-        }
-        else if (get_driverid(ridearray, i) == driver2)
-        {
-            soma2 += get_scoredriver(ridearray, i);
-            counter2++;
-            if (datecomparison(*datarecente2, get_date(ridearray, i)) > 0)
-            {
-                *datarecente2 = get_date(ridearray, i);
-            }
-        }
-        if (get_driverid(ridearray, i + 1) == driver1)
-        {
-            soma1 += get_scoredriver(ridearray, i + 1);
-            counter1++;
-            if (datecomparison(*datarecente1, get_date(ridearray, i + 1)) > 0)
-            {
-                *datarecente1 = get_date(ridearray, i + 1);
-            }
-        }
-        else if (get_driverid(ridearray, i + 1) == driver2)
-        {
-            soma2 += get_scoredriver(ridearray, i + 1);
-            counter2++;
-            if (datecomparison(*datarecente2, get_date(ridearray, i + 1)) > 0)
-            {
-                *datarecente2 = get_date(ridearray, i + 1);
-            }
-        }
-    }
-    *avmedia1 = soma1 / counter1;
-    *avmedia2 = soma2 / counter2;
 }
 int num_viagensuser(RIDE *ridearray, char *username) // q1
 {
@@ -296,16 +280,32 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     }
     else if (city == NULL)
     {
+        int dia1;
+        int mes1;
+        int ano1;
+        char *datea = strdup(data1);
+        sscanf(strtok(datea, "/"), "%d", &dia1);
+        sscanf(strtok(NULL, "/"), "%d", &mes1);
+        sscanf(strtok(NULL, "/"), "%d", &ano1);
+        int dia2;
+        int mes2;
+        int ano2;
+        char *dateb = strdup(data2);
+        sscanf(strtok(dateb, "/"), "%d", &dia2);
+        sscanf(strtok(NULL, "/"), "%d", &mes2);
+        sscanf(strtok(NULL, "/"), "%d", &ano2);
         for (int i = 1; i <= maxride; i++)
         {
             char *data = get_date(ridearray, i);
-            if (datecomparison(data1, data) >= 0 && datecomparison(data2, data) <= 0)
+            if (datecomparison(NULL, data, dia1, mes1, ano1) >= 0 && datecomparison(NULL, data, dia2, mes2, ano2) <= 0)
             {
                 soma += get_precoviagem(ridearray, i);
                 counter++;
             }
             free(data);
         }
+        free(datea);
+        free(dateb);
     }
     return soma / counter;
 }

@@ -26,7 +26,7 @@ void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
     {
         drivermedia[ride->driver].nviagens++;
         drivermedia[ride->driver].somascore += ride->score_driver;
-        if (datecomparison(drivermedia[ride->driver].datarecente, ride->date) > 0)
+        if (datecomparison(drivermedia[ride->driver].datarecente, ride->date, 0, 0, 0) > 0)
         {
             drivermedia[ride->driver].datarecente = ride->date;
         }

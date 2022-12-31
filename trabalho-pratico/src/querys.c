@@ -175,7 +175,7 @@ void query6(RIDE *ridearray, RIDE2 *cityviagens, char query[], FILE *output)
     while (cityviagens[pointer].a != NULL)
     {
         char *dateaux = get_date(ridearray, cityviagens[pointer].id);
-        if (datecomparison(data1, dateaux) >= 0 && datecomparison(data2, dateaux) <= 0)
+        if (datecomparison(data1, dateaux, 0, 0, 0) >= 0 && datecomparison(data2, dateaux, 0, 0, 0) <= 0)
         {
             soma += get_distance(ridearray, cityviagens[pointer].id);
             counter++;
@@ -209,13 +209,29 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     strtok(query, " ");
     char *data1 = strtok(NULL, " ");
     char *data2 = strtok(NULL, "\n");
+    char *datea = strdup(data1);
+    char *dateb = strdup(data2);
+    int dia1;
+    int mes1;
+    int ano1;
+    sscanf(strtok(datea, "/"), "%d", &dia1);
+    sscanf(strtok(NULL, "/"), "%d", &mes1);
+    sscanf(strtok(NULL, "/"), "%d", &ano1);
+    int dia2;
+    int mes2;
+    int ano2;
+    sscanf(strtok(dateb, "/"), "%d", &dia2);
+    sscanf(strtok(NULL, "/"), "%d", &mes2);
+    sscanf(strtok(NULL, "/"), "%d", &ano2);
+    free(datea);
+    free(dateb);
     int pos = 0;
     for (int i = 1; i <= maxride; i++)
     {
         if (get_tip(ridearray, i) > 0)
         {
             char *dataat = get_date(ridearray, i);
-            if (datecomparison(dataat, data1) <= 0 && datecomparison(dataat, data2) >= 0)
+            if (datecomparison(NULL, dataat, dia1, mes1, ano1) >= 0 && datecomparison(NULL, dataat, dia2, mes2, ano2) <= 0)
             {
                 ridecity[pos].id = i;
                 ridecity[pos].a = ridearray[i];
@@ -240,14 +256,14 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
             --j;
         }
         char *dateaux = get_date(ridearray, ridecity[j].id);
-        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat) > 0)
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat, 0, 0, 0) > 0)
         {
             free(dateaux);
             ridecity[j + 1] = ridecity[j];
             --j;
             dateaux = get_date(ridearray, ridecity[j].id);
         }
-        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat) == 0 && aux.id > ridecity[j].id)
+        while (tmp == get_distance(ridearray, ridecity[j].id) && datecomparison(dateaux, dateat, 0, 0, 0) == 0 && aux.id > ridecity[j].id)
         {
             free(dateaux);
             ridecity[j + 1] = ridecity[j];

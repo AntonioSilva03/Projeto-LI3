@@ -39,12 +39,12 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
             avs[j + 1] = avs[j];
             --j;
         }
-        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) < 0 && j >= 0)
+        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente, 0, 0, 0) < 0 && j >= 0)
         {
             avs[j + 1] = avs[j];
             --j;
         }
-        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente) == 0 && aux.id > avs[j].id && j >= 0)
+        while (tmp == avs[j].avmedia && datecomparison(avs[j].datarecente, aux.datarecente, 0, 0, 0) == 0 && aux.id > avs[j].id && j >= 0)
         {
             avs[j + 1] = avs[j];
             --j;
