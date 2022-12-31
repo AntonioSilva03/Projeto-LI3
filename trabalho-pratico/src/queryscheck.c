@@ -26,7 +26,7 @@ void query1check(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char que
         query1user(userarray, driverarray, ridearray, userID, output);
     }
 }
-void query6check(RIDE *ridearray, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
+void query6check(RIDE *ridearray, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real)
 {
     char *city;
     strtok(query, " ");
@@ -51,8 +51,16 @@ void query6check(RIDE *ridearray, char query[], FILE *output, RIDE2 *lisboa, RID
     {
         query6(ridearray, setubal, query, output);
     }
+    else if (strcmp("Coimbra", city) == 0)
+    {
+        query6(ridearray, coimbra, query, output);
+    }
+    else if (strcmp("Vila Real", city) == 0)
+    {
+        query6(ridearray, vila_real, query, output);
+    }
 }
-void query7check(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
+void query7check(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs, char query[], FILE *output, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real)
 {
     int N;
     char *ID;
@@ -80,5 +88,13 @@ void query7check(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *lisboaavs, CIT
     else if (strcmp(city, "Setúbal") == 0)
     {
         query7(output, setubalavs, N);
+    }
+    else if (strcmp(city, "Coimbra") == 0)
+    {
+        query7(output, coimbraavs, N);
+    }
+    else if (strcmp(city, "Vila Real") == 0)
+    {
+        query7(output, vila_realavs, N);
     }
 }

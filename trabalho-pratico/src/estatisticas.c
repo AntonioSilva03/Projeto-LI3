@@ -53,18 +53,22 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
     }
     return t;
 }
-void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs)
+void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs)
 {
     int poslisboa = 0;
     int posbraga = 0;
     int posporto = 0;
     int posfaro = 0;
     int possetubal = 0;
+    int poscoimbra = 0;
+    int posvilareal = 0;
     int nlisboa = 0;
     int nbraga = 0;
     int nporto = 0;
     int nfaro = 0;
     int nsetubal = 0;
+    int ncoimbra = 0;
+    int nvilareal = 0;
     CITYMEDIA aux;
     for (int i = 1; i <= maxride; i++)
     {
@@ -130,6 +134,30 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
             }
             possetubal++;
         }
+        else if (strcmp(city, "Coimbra") == 0)
+        {
+            coimbra[poscoimbra].id = i;
+            coimbra[poscoimbra].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, coimbra[poscoimbra].id);
+                aux.avmedia = get_scoredriver(ridearray, coimbra[poscoimbra].id);
+                ncoimbra += avs(driverarray, ridearray, coimbraavs, aux);
+            }
+            poscoimbra++;
+        }
+        else if (strcmp(city, "Vila Real") == 0)
+        {
+            vila_real[posvilareal].id = i;
+            vila_real[posvilareal].a = ridearray[i];
+            if (strcmp(activity, "active\n") == 0)
+            {
+                aux.id = get_driverid(ridearray, vila_real[posvilareal].id);
+                aux.avmedia = get_scoredriver(ridearray, vila_real[posvilareal].id);
+                nvilareal += avs(driverarray, ridearray, vila_realavs, aux);
+            }
+            posvilareal++;
+        }
         free(city);
         free(activity);
     }
@@ -138,6 +166,8 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
     calcavs(portoavs, nporto);
     calcavs(faroavs, nfaro);
     calcavs(setubalavs, nsetubal);
+    calcavs(coimbraavs, ncoimbra);
+    calcavs(vila_realavs, nvilareal);
 }
 int avs(DRIVER *driverarray, RIDE *ridearray, CITYMEDIA *avs, CITYMEDIA ride)
 {

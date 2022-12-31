@@ -22,7 +22,7 @@ int getquery(char query[])
     sscanf(token, "%d", &queryid);
     return queryid;
 }
-void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal)
+void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real)
 {
     switch (queryid)
     {
@@ -41,10 +41,10 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query5(driverarray, ridearray, query, output);
         break;
     case 6:
-        query6check(ridearray, query, output, lisboa, braga, porto, faro, setubal);
+        query6check(ridearray, query, output, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
         break;
     case 7:
-        query7check(driverarray, ridearray, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, query, output, lisboa, braga, porto, faro, setubal);
+        query7check(driverarray, ridearray, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, query, output, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
         break;
     case 8:
         break;
@@ -133,15 +133,19 @@ int main(int argc, char *argv[])
     RIDE2 *porto = malloc(sizeof *porto * maxride);
     RIDE2 *faro = malloc(sizeof *faro * maxride);
     RIDE2 *setubal = malloc(sizeof *setubal * maxride);
+    RIDE2 *coimbra = malloc(sizeof *coimbra * maxride);
+    RIDE2 *vila_real = malloc(sizeof *vila_real * maxride);
     CITYMEDIA *lisboaavs = malloc(sizeof *lisboaavs * maxdriver);
     CITYMEDIA *bragaavs = malloc(sizeof *bragaavs * maxdriver);
     CITYMEDIA *portoavs = malloc(sizeof *portoavs * maxdriver);
     CITYMEDIA *faroavs = malloc(sizeof *faroavs * maxdriver);
     CITYMEDIA *setubalavs = malloc(sizeof *setubalavs * maxdriver);
+    CITYMEDIA *coimbraavs = malloc(sizeof *coimbraavs * maxdriver);
+    CITYMEDIA *vila_realavs = malloc(sizeof *vila_realavs * maxdriver);
 
     int sizequery2;
     estatisticas2(driverarray, ridearray, drivermedia, &sizequery2);
-    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, lisboaavs, bragaavs, portoavs, faroavs, setubalavs);
+    query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, coimbra, vila_real, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs);
     while (feof(input) != 1)
     {
         if (fgets(line, BUFSIZ, input) != 0)
@@ -153,7 +157,7 @@ int main(int argc, char *argv[])
             char query[BUFSIZ];
             strcpy(query, line);
             int queryid = getquery(query);
-            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, lisboa, braga, porto, faro, setubal);
+            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
             it++;
         }
     }
