@@ -4,6 +4,7 @@
 
 int get_idride(RIDE *ridearray, int pos, char *type); //ride
 char *get_date(RIDE *ridearray, int pos); //ride
+DATA *get_datatok(RIDE *ridearray, int pos);
 int get_driverid(RIDE *ridearray, int pos); //ride
 char *get_user(RIDE *ridearray, int pos); //ride
 char *get_cityride(RIDE *ridearray, int pos, char *type); //ride

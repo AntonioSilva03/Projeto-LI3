@@ -9,6 +9,7 @@ struct rides
 {
     int id;
     char *date;
+    DATA *datatok;
     int driver;
     char *user;
     char *city;
@@ -20,13 +21,29 @@ struct rides
     // char *comment;
 };
 
+DATA *putdata(char *datastr)
+{
+    DATA *data = malloc(sizeof *data);
+    int dia;
+    int mes;
+    int ano;
+    char *date = strdup(datastr);
+    sscanf(strtok(date, "/"), "%d", &dia);
+    sscanf(strtok(NULL, "/"), "%d", &mes);
+    sscanf(strtok(NULL, "/"), "%d", &ano);
+    data->dia = dia;
+    data->mes = mes;
+    data->ano = ano;
+    free(date);
+    return data;
+}
 void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
 {
     if (ride->driver <= maxdriver)
     {
         drivermedia[ride->driver].nviagens++;
         drivermedia[ride->driver].somascore += ride->score_driver;
-        if (datecomparison(drivermedia[ride->driver].datarecente, ride->date, 0, 0, 0) > 0)
+        if (datecomparisonchar(drivermedia[ride->driver].datarecente, ride->date, 0, 0, 0) > 0)
         {
             drivermedia[ride->driver].datarecente = ride->date;
         }
@@ -104,6 +121,7 @@ void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER 
             }
             if (arraypos > 0)
             {
+                ride->datatok = putdata(ride->date);
                 ride->precoviagem = precoviagem(driverarray, ride->driver, ride->distance);
             }
             scoremedia(drivermedia, ride);

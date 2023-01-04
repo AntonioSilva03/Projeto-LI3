@@ -7,6 +7,13 @@
 
 typedef struct users *USER;
 
+typedef struct
+{
+    int dia;
+    int mes;
+    int ano;
+} DATA;
+
 USER *new_userarray();
 
 void parseusers(FILE *users, USER *userarray);

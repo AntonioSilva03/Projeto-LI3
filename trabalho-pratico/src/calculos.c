@@ -33,7 +33,30 @@ int idade(char *bdate) // q1
     }
     return res;
 }
-int datecomparison(char *date1, char *date2, int dia, int mes, int ano) // q2
+int datecomparison(DATA *data1, DATA *data2) // q2
+{
+    if (data2->ano - data1->ano > 0)
+        return 1;
+    else if (data2->ano - data1->ano < 0)
+        return -1;
+    else
+    {
+        if (data2->mes - data1->mes > 0)
+            return 1;
+        else if (data2->mes - data1->mes < 0)
+            return -1;
+        else
+        {
+            if (data2->dia - data1->dia > 0)
+                return 1;
+            else if (data2->dia - data2->dia < 0)
+                return -1;
+            else
+                return 0;
+        }
+    }
+}
+int datecomparisonchar(char *date1, char *date2, int dia, int mes, int ano) // q2
 {
     if (date1 == NULL)
     {
@@ -280,24 +303,20 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     }
     else if (city == NULL)
     {
-        int dia1;
-        int mes1;
-        int ano1;
+        DATA *datatok1 = malloc(sizeof *datatok1);
+        DATA *datatok2 = malloc(sizeof *datatok2);
         char *datea = strdup(data1);
-        sscanf(strtok(datea, "/"), "%d", &dia1);
-        sscanf(strtok(NULL, "/"), "%d", &mes1);
-        sscanf(strtok(NULL, "/"), "%d", &ano1);
-        int dia2;
-        int mes2;
-        int ano2;
+        sscanf(strtok(datea, "/"), "%d", &datatok1->dia);
+        sscanf(strtok(NULL, "/"), "%d", &datatok1->mes);
+        sscanf(strtok(NULL, "/"), "%d", &datatok1->ano);
         char *dateb = strdup(data2);
-        sscanf(strtok(dateb, "/"), "%d", &dia2);
-        sscanf(strtok(NULL, "/"), "%d", &mes2);
-        sscanf(strtok(NULL, "/"), "%d", &ano2);
+        sscanf(strtok(dateb, "/"), "%d", &datatok2->dia);
+        sscanf(strtok(NULL, "/"), "%d", &datatok2->mes);
+        sscanf(strtok(NULL, "/"), "%d", &datatok2->ano);
         for (int i = 1; i <= maxride; i++)
         {
-            char *data = get_date(ridearray, i);
-            if (datecomparison(NULL, data, dia1, mes1, ano1) >= 0 && datecomparison(NULL, data, dia2, mes2, ano2) <= 0)
+            DATA *data = get_datatok(ridearray, i);
+            if (datecomparison(datatok1, data) >= 0 && datecomparison(datatok2, data) <= 0)
             {
                 soma += get_precoviagem(ridearray, i);
                 counter++;

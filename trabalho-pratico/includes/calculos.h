@@ -11,7 +11,8 @@
 //#include "data.h"
 
 int idade(char *bdate);
-int datecomparison(char *date1, char *date2, int dia, int mes, int ano);
+int datecomparison(DATA *data1, DATA *data2);
+int datecomparisonchar(char *date1, char *date2, int dia, int mes, int ano);
 double av_mediauser(RIDE *ridearray, char *username);
 double av_mediadriver(RIDE *ridearray, int driver);
 int num_viagensuser(RIDE *ridearray, char *username);

@@ -8,6 +8,7 @@ struct rides
 {
     int id;
     char *date;
+    DATA *datatok;
     int driver;
     char *user;
     char *city;
@@ -16,28 +17,36 @@ struct rides
     int score_driver;
     double tip;
     double precoviagem;
-    //char *comment;
+    // char *comment;
 };
 
-int get_idride(RIDE *ridearray, int pos, char *type) //ride
+int get_idride(RIDE *ridearray, int pos, char *type) // ride
 {
     int id;
     id = ridearray[pos]->id;
     return id;
 }
-char *get_date(RIDE *ridearray, int pos) //ride
+char *get_date(RIDE *ridearray, int pos) // ride
 {
     char *date;
     date = strdup(ridearray[pos]->date);
     return date;
 }
-int get_driverid(RIDE *ridearray, int pos) //ride
+DATA *get_datatok(RIDE *ridearray, int pos)
+{
+    DATA *data = malloc(sizeof *data);
+    data->dia = ridearray[pos]->datatok->dia;
+    data->mes = ridearray[pos]->datatok->mes;
+    data->ano = ridearray[pos]->datatok->ano;
+    return data;
+}
+int get_driverid(RIDE *ridearray, int pos) // ride
 {
     int driverid;
     driverid = ridearray[pos]->driver;
     return driverid;
 }
-char *get_user(RIDE *ridearray, int pos) //ride
+char *get_user(RIDE *ridearray, int pos) // ride
 {
     char *user;
     user = strdup(ridearray[pos]->user);
@@ -49,25 +58,25 @@ char *get_cityride(RIDE *ridearray, int pos, char *type)
     city = strdup(ridearray[pos]->city);
     return city;
 }
-int get_distance(RIDE *ridearray, int pos) //ride
+int get_distance(RIDE *ridearray, int pos) // ride
 {
     int distance;
     distance = ridearray[pos]->distance;
     return distance;
 }
-int get_scoreuser(RIDE *ridearray, int pos) //ride
+int get_scoreuser(RIDE *ridearray, int pos) // ride
 {
     int scoreuser;
     scoreuser = ridearray[pos]->score_user;
     return scoreuser;
 }
-int get_scoredriver(RIDE *ridearray, int pos) //ride
+int get_scoredriver(RIDE *ridearray, int pos) // ride
 {
     int scoredriver;
     scoredriver = ridearray[pos]->score_driver;
     return scoredriver;
 }
-double get_tip(RIDE *ridearray, int pos) //ride
+double get_tip(RIDE *ridearray, int pos) // ride
 {
     double tip;
     tip = ridearray[pos]->tip;
