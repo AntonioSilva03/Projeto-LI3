@@ -49,7 +49,7 @@ int datecomparison(DATA *data1, DATA *data2) // q2
         {
             if (data2->dia - data1->dia > 0)
                 return 1;
-            else if (data2->dia - data2->dia < 0)
+            else if (data2->dia - data1->dia < 0)
                 return -1;
             else
                 return 0;
