@@ -10,6 +10,7 @@
 #include "../includes/parserides.h"
 //#include "data.h"
 
+char *mystrupr(char *str);
 int idade(char *bdate);
 int datecomparison(DATA *data1, DATA *data2);
 int datecomparisonchar(char *date1, char *date2, int dia, int mes, int ano);

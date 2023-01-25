@@ -14,7 +14,12 @@ struct users
     //char *paymethod;
     char *accountstatus;
 };
-
+int userisnull(USER *userarray, int pos)
+{
+    if (userarray[pos] == NULL)
+        return 0;
+    return 1;
+}
 char *get_username(USER *userarray, int pos) //user
 {
     char *username;

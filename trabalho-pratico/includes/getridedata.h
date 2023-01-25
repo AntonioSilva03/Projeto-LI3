@@ -2,6 +2,7 @@
 #define getridedata_h
 #include "parserides.h"
 
+int rideisnull(RIDE *ridearray, int pos);
 int get_idride(RIDE *ridearray, int pos, char *type); //ride
 char *get_date(RIDE *ridearray, int pos); //ride
 DATA *get_datatok(RIDE *ridearray, int pos);

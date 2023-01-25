@@ -2,6 +2,7 @@
 #define getuserdata_h
 #include "parseusers.h"
 
+int userisnull(USER *userarray, int pos);
 char *get_username(USER *userarray, int pos); //user
 char *get_nameuser(USER *userarray, int pos, char *type); //user
 char get_genderuser(USER *userarray, int pos, char *type); //user

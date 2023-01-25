@@ -16,7 +16,14 @@ struct drivers
     char *accountcreation;
     char *accountstatus;
 };
-
+int driverisnull(DRIVER *driverarray, int pos)
+{
+    if (driverarray[pos] == NULL)
+    {
+        return 0;
+    }
+    return 1;
+}
 int get_iddriver(DRIVER *driverarray, int pos, char *type) // driver
 {
     int id;

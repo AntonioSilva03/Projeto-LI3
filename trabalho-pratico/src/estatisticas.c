@@ -16,6 +16,11 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
 {
     for (int i = 1; i <= maxdriver; i++)
     {
+        if (driverisnull(driverarray, i) == 0)
+        {
+            avs[i].activity = "inactive\n";
+            continue;
+        }
         avs[i].avmedia = avs[i].somascore / avs[i].nviagens;
         avs[i].activity = get_accountstatusdriver(driverarray, i, "driver");
         avs[i].nome = get_namedriver(driverarray, i, "driver");
@@ -23,7 +28,7 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
     int t = 1;
     for (int i = 1; i <= maxdriver; i++)
     {
-        if (strcmp(avs[i].activity, "active\n") == 0)
+        if (strcmp(avs[i].activity, "active\n") == 0 && avs[i].avmedia == avs[i].avmedia)
         {
             avs[t] = avs[i];
             t++;
@@ -72,6 +77,11 @@ void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga
     CITYMEDIA aux;
     for (int i = 1; i <= maxride; i++)
     {
+        if (rideisnull(ridearray, i) == 0)
+        {
+            continue;
+        }
+        
         char *city = get_cityride(ridearray, i, "ride");
         char *activity = get_accountstatusdriver(driverarray, get_driverid(ridearray, i), "driver");
         if (strcmp(city, "Lisboa") == 0)

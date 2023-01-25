@@ -20,6 +20,12 @@ struct rides
     // char *comment;
 };
 
+int rideisnull(RIDE *ridearray, int pos)
+{
+    if (ridearray[pos] == NULL)
+        return 0;
+    return 1;
+}
 int get_idride(RIDE *ridearray, int pos, char *type) // ride
 {
     int id;

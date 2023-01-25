@@ -24,6 +24,7 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
     char *activity;
     for (int i = 1; i <= maxuser; i++)
     {
+        if(userisnull(userarray, i) == 0)continue;
         username = get_username(userarray, i);
         activity = strtok(get_accountstatususer(userarray, i, "user"), "\n");
         if (strcmp(ID, username) == 0)
@@ -56,6 +57,7 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
     char *activity;
     for (int i = 1; i <= maxdriver; i++)
     {
+        if(driverisnull(driverarray, i) == 0) continue;
         if (get_iddriver(driverarray, i, "driver") == id)
         {
             activity = strtok(get_accountstatusdriver(driverarray, i, "driver"), "\n");
@@ -236,6 +238,7 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     int pos = 0;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         if (get_tip(ridearray, i) > 0)
         {
             DATA *dataat = get_datatok(ridearray, i);
@@ -258,7 +261,7 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
         RIDE2 aux = ridecity[i];
         DATA *dateat = get_datatok(ridearray, aux.id);
         int j = i - 1;
-        while (tmp > get_distance(ridearray, ridecity[j].id))
+        while (j>=0 && tmp > get_distance(ridearray, ridecity[j].id))
         {
             ridecity[j + 1] = ridecity[j];
             --j;

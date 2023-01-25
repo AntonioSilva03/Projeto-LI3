@@ -4,6 +4,7 @@
 #include "../includes/parserides.h"
 #include "../includes/structsaux.h"
 #include "../includes/calculos.h"
+#include <ctype.h>
 
 struct rides
 {
@@ -54,9 +55,130 @@ RIDE *new_ridearray()
     RIDE *ridesarray = malloc(sizeof *ridesarray * maxride);
     return ridesarray;
 }
-
+int verificacaorides(char *line)
+{
+    if (line[0] == ';' || line[13] == ';' || line[38] == ';')
+    {
+        return 0;
+    }
+    RIDE ride = malloc(sizeof *ride);
+    int context = 1;
+    char *token = strtok(line, ";");
+    while (token != NULL)
+    {
+        if (context == 1)
+        {
+            ride->id = atoi(token);
+            if (ride->id <= 0)
+            {
+                return 0;
+            }
+        }
+        else if (context == 2)
+        {
+            ride->date = strdup(token);
+            if (strlen(ride->date) != 10 || ride->date[2] != '/' || ride->date[5] != '/')
+            {
+                return 0;
+            }
+            int day = atoi(ride->date);
+            int month = atoi(ride->date + 3);
+            int year = atoi(ride->date + 6);
+            if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
+            {
+                return 0;
+            }
+        }
+        else if (context == 3)
+        {
+            ride->driver = atoi(token);
+            if (ride->driver <= 0)
+            {
+                return 0;
+            }
+        }
+        else if (context == 4)
+        {
+        }
+        else if (context == 5)
+        {
+            for (int i = 0; token[i]; i++)
+            {
+                if (isdigit(token[i]))
+                {
+                    return 0;
+                }
+            }
+        }
+        else if (context == 6)
+        {
+            for (int i = 0; token[i]; i++)
+            {
+                if (!isdigit(token[i]))
+                {
+                    return 0;
+                }   
+            }
+            if (atoi(token) != atof(token))
+            {
+                return 0;
+            }
+            ride->distance = atoi(token);
+            if (ride->distance <= 0)
+                return 0;
+        }
+        else if (context == 7)
+        {
+            for (int i = 0; token[i]; i++)
+            {
+                if (!isdigit(token[i]))
+                {
+                    return 0;
+                }   
+            }
+            ride->score_user = atoi(token);
+            if (ride->score_user <= 0)
+                return 0;
+        }
+        else if (context == 8)
+        {
+            for (int i = 0; token[i]; i++)
+            {
+                if (!isdigit(token[i]))
+                {
+                    return 0;
+                }   
+            }
+            ride->score_driver = atoi(token);
+            if (ride->score_driver <= 0)
+                return 0;
+        }
+        else if (context == 9)
+        {
+            for (int i = 0; token[i]; i++)
+            {
+                if (!isdigit(token[i]) && token[i] != '.')
+                {
+                    return 0;
+                }   
+            }
+            ride->tip = atof(token);
+            if (ride->tip < 0)
+                return 0;
+        }
+        context++;
+        token = strtok(NULL, ";");
+    }
+    free(ride);
+    free(line);
+    return 1;
+}
 void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER *driverarray)
 {
+    for (int i = 0; i <= maxride; i++)
+    {
+        ridesarray[i] = NULL;
+    }
     char str[BUFSIZ];
     int arraypos = 0;
     while (feof(rides) != 1)
@@ -64,6 +186,12 @@ void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER 
         if (fgets(str, BUFSIZ, rides) != 0)
         {
             RIDE ride = malloc(sizeof *ride);
+            char *line = strdup(str);
+            if (arraypos > 0 && verificacaorides(line) == 0)
+            {
+                arraypos++;
+                continue;
+            }
             int context = 1;
             char *token = strtok(str, ";");
             while (token != NULL)
@@ -123,9 +251,12 @@ void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER 
             {
                 ride->datatok = putdata(ride->date);
                 ride->precoviagem = precoviagem(driverarray, ride->driver, ride->distance);
+                            scoremedia(drivermedia, ride);
             }
-            scoremedia(drivermedia, ride);
-            ridesarray[arraypos] = ride;
+            if (arraypos > 0)
+                ridesarray[ride->id] = ride;
+            else
+                ridesarray[0] = ride;
             arraypos++;
         }
     }

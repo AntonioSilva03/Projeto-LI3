@@ -9,6 +9,18 @@
 #include "../includes/getdriverdata.h"
 #include "../includes/getridedata.h"
 #include "../includes/calculos.h"
+#include "ctype.h"
+
+char *mystrupr(char *str)
+{
+    int i = 0;
+    while (str[i] != '\0')
+    {
+        str[i] = toupper((unsigned char)str[i]);
+        i++;
+    }
+    return str;
+}
 
 int idade(char *bdate) // q1
 {
@@ -135,6 +147,7 @@ double av_mediauser(RIDE *ridearray, char *username) // q1
     int counter = 0;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         char *useraux = get_user(ridearray, i);
         if (strcmp(useraux, username) == 0)
         {
@@ -151,6 +164,7 @@ double av_mediadriver(RIDE *ridearray, int driver) // q1
     int counter = 0;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         if (get_driverid(ridearray, i) == driver)
         {
             soma += get_scoredriver(ridearray, i);
@@ -164,6 +178,7 @@ int num_viagensuser(RIDE *ridearray, char *username) // q1
     int counter = 0;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         char *user = get_user(ridearray, i);
         if (strcmp(user, username) == 0)
         {
@@ -178,6 +193,7 @@ int num_viagensdriver(RIDE *ridearray, int driver) // q1
     int counter = 0;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         if (get_driverid(ridearray, i) == driver)
             counter++;
     }
@@ -192,6 +208,7 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
     int kmviagem;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         char *useraux = get_user(ridearray, i);
         if (strcmp(useraux, username) == 0)
         {
@@ -225,6 +242,7 @@ double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
     int kmviagem;
     for (int i = 1; i <= maxride; i++)
     {
+        if(rideisnull(ridearray, i) == 0) continue;
         if (get_driverid(ridearray, i) == driver)
         {
             kmviagem = get_distance(ridearray, i);
@@ -292,6 +310,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     {
         for (int i = 1; i <= maxride; i++)
         {
+            if(rideisnull(ridearray, i) == 0) continue;
             char *cityaux = get_cityride(ridearray, i, "ride");
             if (strcmp(cityaux, city) == 0)
             {
@@ -315,6 +334,7 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
         sscanf(strtok(NULL, "/"), "%d", &datatok2->ano);
         for (int i = 1; i <= maxride; i++)
         {
+            if(rideisnull(ridearray, i) == 0) continue;
             DATA *data = get_datatok(ridearray, i);
             if (datecomparison(datatok1, data) >= 0 && datecomparison(datatok2, data) <= 0)
             {

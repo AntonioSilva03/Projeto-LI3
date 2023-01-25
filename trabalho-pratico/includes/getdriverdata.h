@@ -2,6 +2,7 @@
 #define getdriverdata_h
 #include "parsedrivers.h"
 
+int driverisnull(DRIVER *driverarray, int pos);
 int get_iddriver(DRIVER *driverarray, int pos, char *type);
 char *get_namedriver(DRIVER *driverarray, int pos, char *type);
 char *get_birthdatedriver(DRIVER *driverarray, int pos, char *type);
