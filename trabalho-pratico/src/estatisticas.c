@@ -25,13 +25,13 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
         avs[i].activity = get_accountstatusdriver(driverarray, i, "driver");
         avs[i].nome = get_namedriver(driverarray, i, "driver");
     }
-    int t = 1;
+    int t = 0;
     for (int i = 1; i <= maxdriver; i++)
     {
         if (strcmp(avs[i].activity, "active\n") == 0 && avs[i].avmedia == avs[i].avmedia)
         {
-            avs[t] = avs[i];
             t++;
+            avs[t] = avs[i];
         }
     }
     for (int i = 1; i <= t; i++)
