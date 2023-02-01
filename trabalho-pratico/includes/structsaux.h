@@ -21,6 +21,7 @@ typedef struct
 {
     char *username;
     char *nome;
+    char *viagemrecente;
     int dist;
 } USERDIST; // query3
 

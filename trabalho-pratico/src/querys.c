@@ -11,6 +11,7 @@
 #include "../includes/getridedata.h"
 #include "../includes/calculos.h"
 #include "../includes/structsaux.h"
+#include "../includes/hashing.h"
 
 void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID, FILE *output)
 {
@@ -90,51 +91,15 @@ void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t)
     }
     fclose(output);
 }
-void query3(USER *userarray, RIDE *ridearray, char query[], FILE *output)
+void query3(USERDIST *userdist, char query[], FILE* output)
 {
     int N;
     char *ID = strtok(query, " ");
     ID = strtok(NULL, "\n");
     sscanf(ID, "%d", &N);
-    RIDE *rideaux = malloc(sizeof *rideaux * maxride);
-    rideaux = ridearray;
-    USERDIST *dist = malloc(sizeof *dist * maxuser);
-    int pos = 1;
-    int disttot;
-    for (int i = 1; i <= maxuser; i++)
+    for (int i = 0; i < N; i++)
     {
-        disttot = 0;
-        dist[pos].username = get_username(userarray, i);
-        dist[pos].nome = get_nameuser(userarray, i, "user");
-        for (int j = 1; j <= maxride; j++)
-        {
-            if (rideaux[j] != NULL)
-            {
-                if (strcmp(get_user(rideaux, j), dist[pos].username) == 0)
-                {
-                    disttot += get_distance(rideaux, j);
-                    rideaux[j] = NULL;
-                }
-            }
-        }
-        dist[pos].dist = disttot;
-        pos++;
-    }
-    for (int i = 1; i < pos; i++)
-    {
-        int tmp = dist[i].dist;
-        USERDIST aux = dist[i];
-        int j = i - 1;
-        while (tmp < dist[j].dist && j >= 0)
-        {
-            dist[j + 1] = dist[j];
-            --j;
-        }
-        dist[j + 1] = aux;
-    }
-    for (int i = maxuser; i > maxuser - N; i--)
-    {
-        fprintf(output, "%s;%s;%d\n", dist[i].username, dist[i].nome, dist[i].dist);
+        fprintf(output, "%s;%s;%d\n", userdist[i].username, userdist[i].nome, userdist[i].dist);
     }
     fclose(output);
 }
@@ -217,7 +182,98 @@ void query7(FILE *output, CITYMEDIA *avs, int N)
     }
     fclose(output);
 }
-
+typedef struct
+{
+    int rideid;
+    int driverid;
+    char *contadriver;
+    char *contauser;
+    char *namedriver;
+    char *user;
+    char *nameuser;
+} GENDER;
+void query8(char query[], FILE *output, USER *userhash, DRIVER *driverarray, RIDE *ridearray)
+{
+    int idadee;
+    char gen;
+    char *aux;
+    strtok(query, " ");
+    aux = strtok(NULL, " ");
+    sscanf(aux, "%c", &gen);
+    aux = strtok(NULL, "\n");
+    sscanf(aux, "%d", &idadee);
+    GENDER *genderarr = malloc(sizeof *genderarr * maxuser);
+    int pos = 0;
+    for (int i = 1; i <= maxride; i++)
+    {
+        if(rideisnull(ridearray, i) == 0 || get_genderdriver(driverarray, get_driverid(ridearray, i), "driver") != gen) continue;
+        int driverid = get_driverid(ridearray, i);
+        char *driveracc = get_accountcreationdriver(driverarray, driverid, "driver");
+        char *driverstatus = get_accountstatusdriver(driverarray, driverid, "driver");
+        if (strcmp(driverstatus, "active\n") != 0 || idade(driveracc) < idadee)
+        {
+            free(driverstatus);
+            free(driveracc);
+            continue;
+        }
+        free(driverstatus);
+        char *user = get_user(ridearray, i);
+        int index = hashsearch(userhash, user);
+        if (index == -1)
+        {
+            free(driveracc);
+            free(user);
+            continue;
+        }
+        if (get_genderuser(userhash, index, "user") == gen)
+        {
+            char *useracc = get_accountcreationuser(userhash, index, "user");
+            char *userstatus = get_accountstatususer(userhash, index, "user");
+            if (strcmp(userstatus, "active\n") == 0 && idade(useracc) >= idadee)
+            {
+                genderarr[pos].rideid = i;
+                genderarr[pos].driverid = driverid;
+                genderarr[pos].contadriver = strdup(driveracc);
+                genderarr[pos].contauser = strdup(useracc);
+                genderarr[pos].namedriver = get_namedriver(driverarray, driverid, "driver");
+                genderarr[pos].user = strdup(user);
+                genderarr[pos].nameuser = get_nameuser(userhash, index, "user");
+                pos++;
+            }
+            free(useracc);
+            free(userstatus);
+        }
+        free(driveracc);
+        free(user);
+    }
+    for (int i = 0; i < pos; i++)
+    {
+        GENDER aux = genderarr[i];
+        int j = i - 1;
+        while (j >= 0 && datecomparisonchar(aux.contadriver, genderarr[j].contadriver, 0, 0, 0) > 0)
+        {
+            genderarr[j + 1] = genderarr[j];
+            --j;
+        }
+        while (j >= 0 && datecomparisonchar(aux.contadriver, genderarr[j].contadriver, 0, 0, 0) == 0 && datecomparisonchar(aux.contauser, genderarr[j].contauser, 0, 0, 0) > 0)
+        {
+            genderarr[j + 1] = genderarr[j];
+            --j;
+        }
+        while (j >= 0 && datecomparisonchar(aux.contadriver, genderarr[j].contadriver, 0, 0, 0) == 0 && datecomparisonchar(aux.contadriver, genderarr[j].contadriver, 0, 0, 0) == 0 && aux.rideid < genderarr[j].rideid)
+        {
+            genderarr[j + 1] = genderarr[j];
+            --j;
+        }
+        genderarr[j + 1] = aux;
+    }
+    for (int i = 0; i < pos; i++)
+    {
+        fprintf(output, "%12.12d;%s;%s;%s\n", genderarr[i].driverid, genderarr[i].namedriver, genderarr[i].user, genderarr[i].nameuser);
+    }
+    free(genderarr);
+    fclose(output);
+}
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
 {
     strtok(query, " ");

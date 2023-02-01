@@ -16,6 +16,6 @@ typedef struct
 
 USER *new_userarray();
 
-void parseusers(FILE *users, USER *userarray);
+void parseusers(FILE *users, USER *userarray, USER *userhash);
 
 #endif

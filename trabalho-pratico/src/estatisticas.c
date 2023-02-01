@@ -11,6 +11,7 @@
 #include "../includes/getridedata.h"
 #include "../includes/calculos.h"
 #include "../includes/estatisticas.h"
+#include "../includes/hashing.h"
 
 int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
 {
@@ -57,6 +58,102 @@ int query2est(DRIVER *driverarray, RIDE *ridearray, DRIVERMEDIA *avs)
         avs[j + 1] = aux;
     }
     return t;
+}
+int hashsearchuserdist(USERDIST *userhash, char *key)
+{
+    int index = hashkey(key);
+    int aux;
+    if (index - 1 < 0)
+    {
+        aux = maxride - 1;
+    }
+    else aux = index - 1;
+    if (userhash[index].username == NULL)
+    {
+        return -1;   
+    }
+    while (userhash[index].username == NULL || strcmp(userhash[index].username, key) != 0)
+    {
+        if (index == aux)
+        {
+            return -1;
+        }
+        if (index + 1 == maxride)
+            index = 0;
+        else
+            index++;
+    }
+    return index;
+}
+void query3est(USER *userhash, USERDIST *userdist, RIDE *ridearray)
+{
+    for (int i = 1; i <= maxride; i++)
+    {
+        if(rideisnull(ridearray, i) == 0) continue;
+        char *user = get_user(ridearray, i);
+        int index = hashsearchuserdist(userdist, user);
+        free(user);
+        if(index == -1) continue;
+        char *userstatus = get_accountstatususer(userhash, index, "user");
+        if(strcmp(userstatus, "active\n") != 0)
+        {
+            free(userstatus);
+            continue;
+        }
+        free(userstatus);
+        userdist[index].dist += get_distance(ridearray, i);
+        char *date = get_date(ridearray, i);
+        if (datecomparisonchar(userdist[index].viagemrecente, date, 0, 0, 0) > 0)
+        {
+            userdist[index].viagemrecente = strdup(date);
+        }
+        free(date);
+    }
+    int pos = 0;
+    int tot = 0;
+    int media;
+    for (int i = 0; i < maxride; i++)
+    {
+        if (userdist[i].username != NULL)
+        {
+            userdist[pos] = userdist[i];
+            tot += userdist[pos].dist;
+            pos++;
+        }
+    }
+    media = tot / pos;
+    for (int i = 0; i < pos; i++)
+    {
+        int tmp = userdist[i].dist;
+        if(tmp < media + 50) continue;
+        USERDIST aux = userdist[i];
+        char *viagemaux = strdup(aux.viagemrecente);
+        int dia;
+        int mes;
+        int ano;
+        sscanf(strtok(viagemaux, "/"), "%d", &dia);
+        sscanf(strtok(NULL, "/"), "%d", &mes);
+        sscanf(strtok(NULL, "/"), "%d", &ano);
+        free(viagemaux);
+        int j = i - 1;
+        while(j >= 0 && userdist[j].dist < tmp)
+        {
+            userdist[j + 1] = userdist[j];
+            --j;
+        }
+        while(j >= 0 && userdist[j].dist == tmp && datecomparisonchar(NULL, userdist[j].viagemrecente, dia, mes, ano) < 0)
+        {
+            userdist[j + 1] = userdist[j];
+            --j;
+        }
+        while(j >= 0 && userdist[j].dist == tmp && datecomparisonchar(NULL, userdist[j].viagemrecente, dia, mes, ano) == 0 && strcmp(userdist[j].username, aux.username) > 0)
+        {
+            userdist[j + 1] = userdist[j];
+            --j;
+        }
+        userdist[j + 1] = aux;
+    }
+    
 }
 void query7est(DRIVER *driverarray, RIDE *ridearray, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs, CITYMEDIA *portoavs, CITYMEDIA *faroavs, CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs)
 {

@@ -71,6 +71,8 @@ int verificacaorides(char *line)
             ride->id = atoi(token);
             if (ride->id <= 0)
             {
+                free(line);
+                free(ride);
                 return 0;
             }
         }
@@ -79,6 +81,8 @@ int verificacaorides(char *line)
             ride->date = strdup(token);
             if (strlen(ride->date) != 10 || ride->date[2] != '/' || ride->date[5] != '/')
             {
+                free(line);
+                free(ride);
                 return 0;
             }
             int day = atoi(ride->date);
@@ -86,6 +90,8 @@ int verificacaorides(char *line)
             int year = atoi(ride->date + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(line);
+                free(ride);
                 return 0;
             }
         }
@@ -94,6 +100,8 @@ int verificacaorides(char *line)
             ride->driver = atoi(token);
             if (ride->driver <= 0)
             {
+                free(line);
+                free(ride);
                 return 0;
             }
         }
@@ -106,6 +114,8 @@ int verificacaorides(char *line)
             {
                 if (isdigit(token[i]))
                 {
+                    free(line);
+                    free(ride);
                     return 0;
                 }
             }
@@ -116,16 +126,24 @@ int verificacaorides(char *line)
             {
                 if (!isdigit(token[i]))
                 {
+                    free(line);
+                    free(ride);
                     return 0;
-                }   
+                }
             }
             if (atoi(token) != atof(token))
             {
+                free(line);
+                free(ride);
                 return 0;
             }
             ride->distance = atoi(token);
             if (ride->distance <= 0)
+            {
+                free(line);
+                free(ride);
                 return 0;
+            }
         }
         else if (context == 7)
         {
@@ -133,12 +151,18 @@ int verificacaorides(char *line)
             {
                 if (!isdigit(token[i]))
                 {
+                    free(line);
+                    free(ride);
                     return 0;
-                }   
+                }
             }
             ride->score_user = atoi(token);
             if (ride->score_user <= 0)
+            {
+                free(line);
+                free(ride);
                 return 0;
+            }
         }
         else if (context == 8)
         {
@@ -146,12 +170,18 @@ int verificacaorides(char *line)
             {
                 if (!isdigit(token[i]))
                 {
+                    free(line);
+                    free(ride);
                     return 0;
-                }   
+                }
             }
             ride->score_driver = atoi(token);
             if (ride->score_driver <= 0)
+            {
+                free(line);
+                free(ride);
                 return 0;
+            }
         }
         else if (context == 9)
         {
@@ -159,12 +189,18 @@ int verificacaorides(char *line)
             {
                 if (!isdigit(token[i]) && token[i] != '.')
                 {
+                    free(line);
+                    free(ride);
                     return 0;
-                }   
+                }
             }
             ride->tip = atof(token);
             if (ride->tip < 0)
+            {
+                free(line);
+                free(ride);
                 return 0;
+            }
         }
         context++;
         token = strtok(NULL, ";");

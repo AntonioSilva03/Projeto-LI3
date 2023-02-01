@@ -10,6 +10,7 @@
 #include "../includes/structsaux.h"
 #include "../includes/estatisticas.h"
 #include "../includes/maxs.h"
+#include "../includes/getuserdata.h"
 
 int maxuser = 100000;
 int maxdriver = 10000;
@@ -22,7 +23,7 @@ int getquery(char query[])
     sscanf(token, "%d", &queryid);
     return queryid;
 }
-void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real)
+void handle(USER *userarray, USER *userhash, DRIVER *driverarray, RIDE *ridearray, int queryid, char query[], FILE *output, DRIVERMEDIA *drivermedia, USERDIST *userdist, RIDE2 *ride2, int sizequery2, CITYMEDIA *lisboaavs, CITYMEDIA *bragaavs , CITYMEDIA *portoavs , CITYMEDIA *faroavs , CITYMEDIA *setubalavs, CITYMEDIA *coimbraavs, CITYMEDIA *vila_realavs, RIDE2 *lisboa, RIDE2 *braga, RIDE2 *porto, RIDE2 *faro, RIDE2 *setubal, RIDE2 *coimbra, RIDE2 *vila_real)
 {
     switch (queryid)
     {
@@ -33,6 +34,7 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query2(query, output, drivermedia, sizequery2);
         break;
     case 3:
+        query3(userdist, query, output);
         break;
     case 4:
         query4(driverarray, ridearray, query, output);
@@ -47,6 +49,7 @@ void handle(USER *userarray, DRIVER *driverarray, RIDE *ridearray, int queryid, 
         query7check(driverarray, ridearray, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, query, output, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
         break;
     case 8:
+        query8(query, output, userhash, driverarray, ridearray);
         break;
     case 9:
         query9(ridearray, query, output, ride2);
@@ -102,9 +105,16 @@ int main(int argc, char *argv[])
     FILE *drivers = fopen(pathdriver, "r");
     FILE *rides = fopen(pathride, "r");
     USER *userarray = new_userarray();
+    USER *userhash = malloc(sizeof *userhash * maxride);
+    USERDIST *userdist = malloc(sizeof *userdist * maxride);
     DRIVER *driverarray = new_driverarray();
     RIDE *ridearray = new_ridearray();
     DRIVERMEDIA *drivermedia = malloc(sizeof *drivermedia * maxdriver);
+    for (int i = 0; i < maxride; i++)
+    {
+        userhash[i] = NULL;
+        userdist[i].username = NULL;
+    }
     for (int i = 1; i <= maxdriver; i++)
     {
         drivermedia[i].id = i;
@@ -112,8 +122,15 @@ int main(int argc, char *argv[])
         drivermedia[i].somascore = 0;
         drivermedia[i].nviagens = 0;
     }
-    parseusers(users, userarray);
+    parseusers(users, userarray, userhash);
     fclose(users);
+    for (int i = 0; i < maxride; i++)
+    {
+        if(userisnull(userhash, i) == 0)continue;
+        userdist[i].username = get_username(userhash, i);
+        userdist[i].nome = get_nameuser(userhash, i, "user");
+        userdist[i].viagemrecente = "01/01/1990";
+    }
     parsedrivers(drivers, driverarray);
     fclose(drivers);
     parserides(rides, ridearray, drivermedia, driverarray);
@@ -124,7 +141,6 @@ int main(int argc, char *argv[])
     char *filename = malloc(BUFSIZ);
     int it = 1;
 
-    USERDIST *userdist = malloc(sizeof *userdist * maxuser);
     RIDE2 *ride2 = malloc(sizeof *ride2 * maxride);
     CITYMEDIA *citymedia = malloc(sizeof *citymedia * maxuser);
 
@@ -145,6 +161,7 @@ int main(int argc, char *argv[])
 
     int sizequery2;
     estatisticas2(driverarray, ridearray, drivermedia, &sizequery2);
+    query3est(userhash, userdist, ridearray);
     query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, coimbra, vila_real, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs);
     while (feof(input) != 1)
     {
@@ -157,7 +174,7 @@ int main(int argc, char *argv[])
             char query[BUFSIZ];
             strcpy(query, line);
             int queryid = getquery(query);
-            handle(userarray, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
+            handle(userarray, userhash, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
             it++;
         }
     }

@@ -28,7 +28,8 @@ int idade(char *bdate) // q1
     int dia;
     int mes;
     int ano;
-    sscanf(strtok(bdate, "/"), "%d", &dia);
+    char *bdatee = strdup(bdate);
+    sscanf(strtok(bdatee, "/"), "%d", &dia);
     sscanf(strtok(NULL, "/"), "%d", &mes);
     sscanf(strtok(NULL, "/"), "%d", &ano);
     res = REFANO - ano;
@@ -43,6 +44,7 @@ int idade(char *bdate) // q1
             res--;
         }
     }
+    free(bdatee);
     return res;
 }
 int datecomparison(DATA *data1, DATA *data2) // q2
@@ -203,7 +205,6 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
 {
     double total = 0;
     double tottip = 0;
-    char *carclass;
     int driver;
     int kmviagem;
     for (int i = 1; i <= maxride; i++)
@@ -212,6 +213,7 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
         char *useraux = get_user(ridearray, i);
         if (strcmp(useraux, username) == 0)
         {
+            char *carclass;
             driver = get_driverid(ridearray, i);
             kmviagem = get_distance(ridearray, i);
             tottip += get_tip(ridearray, i);
@@ -228,10 +230,10 @@ double total_gasto(DRIVER *driverarray, RIDE *ridearray, char *username) // q1
             {
                 total += 5.20 + (0.94 * kmviagem);
             }
+            free(carclass);
         }
         free(useraux);
     }
-    free(carclass);
     return total + tottip;
 }
 double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
@@ -263,25 +265,6 @@ double total_auferido(DRIVER *driverarray, RIDE *ridearray, int driver) // q1
     }
     free(carclass);
     return total + tottip;
-}
-int dist_total(RIDE *ridearray, char *username) // q3
-{
-    int disttot = 0;
-    char *user;
-    for (int i = 1; i <= maxride; i++)
-    {
-        if (ridearray[i] != NULL)
-        {
-            user = get_user(ridearray, i);
-            if (strcmp(username, user) == 0)
-            {
-                disttot += get_distance(ridearray, i);
-                ridearray[i] = NULL;
-            }
-        }
-    }
-    free(user);
-    return disttot;
 }
 double precoviagem(DRIVER *driverarray, int driverid, int dist) // q4
 {

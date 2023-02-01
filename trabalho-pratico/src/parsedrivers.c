@@ -43,6 +43,8 @@ int verificacaodrivers(char *line)
             driver->name = strdup(token);
             if (strlen(driver->name) == 0 || driver->name[0] == '\0')
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -51,6 +53,8 @@ int verificacaodrivers(char *line)
             driver->birthdate = strdup(token);
             if (strlen(driver->birthdate) != 10 || driver->birthdate[2] != '/' || driver->birthdate[5] != '/')
             {
+                free(line);
+                free(driver);
                 return 0;
             }
             int day = atoi(driver->birthdate);
@@ -58,6 +62,8 @@ int verificacaodrivers(char *line)
             int year = atoi(driver->birthdate + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -66,6 +72,8 @@ int verificacaodrivers(char *line)
             char *aux = mystrupr(strdup(token));
             if (strcmp(aux, "BASIC") == 0 || strcmp(aux, "GREEN") == 0 || strcmp(aux, "PREMIUM") == 0)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -75,6 +83,8 @@ int verificacaodrivers(char *line)
             char *aux = mystrupr(driver->car_class);
             if (strcmp(aux, "BASIC") != 0 && strcmp(aux, "GREEN") != 0 && strcmp(aux, "PREMIUM") != 0)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -82,6 +92,8 @@ int verificacaodrivers(char *line)
         {
             if (strlen(token) != 8 || token[2] != '-' || token[5] != '-')
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -90,6 +102,8 @@ int verificacaodrivers(char *line)
             driver->city = strdup(token);
             if (strlen(driver->city) < 2)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -98,6 +112,8 @@ int verificacaodrivers(char *line)
             driver->accountcreation = strdup(token);
             if (strlen(driver->accountcreation) != 10 || driver->accountcreation[2] != '/' || driver->accountcreation[5] != '/')
             {
+                free(line);
+                free(driver);
                 return 0;
             }
             int day = atoi(driver->accountcreation);
@@ -105,6 +121,8 @@ int verificacaodrivers(char *line)
             int year = atoi(driver->accountcreation + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
@@ -114,6 +132,8 @@ int verificacaodrivers(char *line)
             char *aux = mystrupr(driver->accountstatus);
             if (strcmp(aux, "ACTIVE\n") != 0 && strcmp(aux, "INACTIVE\n") != 0)
             {
+                free(line);
+                free(driver);
                 return 0;
             }
         }
