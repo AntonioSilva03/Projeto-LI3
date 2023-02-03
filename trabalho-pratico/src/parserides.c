@@ -52,7 +52,7 @@ void scoremedia(DRIVERMEDIA *drivermedia, RIDE ride)
 }
 RIDE *new_ridearray()
 {
-    RIDE *ridesarray = malloc(sizeof *ridesarray * maxride);
+    RIDE *ridesarray = malloc(sizeof *ridesarray * (maxride + 1));
     return ridesarray;
 }
 int verificacaorides(char *line)

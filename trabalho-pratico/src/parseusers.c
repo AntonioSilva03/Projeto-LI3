@@ -18,7 +18,7 @@ struct users
 
 USER *new_userarray()
 {
-    USER *usersarray = malloc(sizeof *usersarray * maxuser);
+    USER *usersarray = malloc(sizeof *usersarray * (maxuser + 1));
     return usersarray;
 }
 

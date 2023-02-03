@@ -6,5 +6,6 @@
 extern int maxuser;
 extern int maxdriver;
 extern int maxride;
+extern int interativo;
 
 #endif

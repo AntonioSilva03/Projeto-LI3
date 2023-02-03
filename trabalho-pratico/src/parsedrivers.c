@@ -20,7 +20,7 @@ struct drivers
 
 DRIVER *new_driverarray()
 {
-    DRIVER *driversarray = malloc(sizeof *driversarray * maxdriver);
+    DRIVER *driversarray = malloc(sizeof *driversarray * (maxdriver + 1));
     return driversarray;
 }
 

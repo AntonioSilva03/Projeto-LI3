@@ -38,14 +38,16 @@ void query1user(USER *userarray, DRIVER *driverarray, RIDE *ridearray, char *ID,
                 avmedia = av_mediauser(ridearray, username);
                 numviagens = num_viagensuser(ridearray, username);
                 totalgasto = total_gasto(driverarray, ridearray, username);
+                if(interativo == 0)
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalgasto);
+                else printf("%s;%c;%d;%.3f;%d;%.3f\n\n", nome, gender, idadee, avmedia, numviagens, totalgasto);
                 free(nome);
             }
         }
         free(username);
         free(activity);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
 }
 void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
 {
@@ -70,13 +72,15 @@ void query1driver(DRIVER *driverarray, RIDE *ridearray, int id, FILE *output)
                 avmedia = av_mediadriver(ridearray, i);
                 numviagens = num_viagensdriver(ridearray, i);
                 totalauferido = total_auferido(driverarray, ridearray, i);
+                if(interativo == 0)
                 fprintf(output, "%s;%c;%d;%.3f;%d;%.3f\n", nome, gender, idadee, avmedia, numviagens, totalauferido);
+                else printf("%s;%c;%d;%.3f;%d;%.3f\n\n", nome, gender, idadee, avmedia, numviagens, totalauferido);
                 free(nome);
             }
             free(activity);
         }
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
 }
 void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t)
 {
@@ -87,9 +91,12 @@ void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t)
     // DRIVERMEDIA *avs = malloc(sizeof *avs * MAX_DRIVER);
     for (int i = t; i > t - N; i--)
     {
+        if(interativo == 0)
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
+        else printf("%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
+    else printf("\n");
 }
 void query3(USERDIST *userdist, char query[], FILE* output)
 {
@@ -99,9 +106,17 @@ void query3(USERDIST *userdist, char query[], FILE* output)
     sscanf(ID, "%d", &N);
     for (int i = 0; i < N; i++)
     {
-        fprintf(output, "%s;%s;%d\n", userdist[i].username, userdist[i].nome, userdist[i].dist);
+        if (interativo == 0)
+        {
+            fprintf(output, "%s;%s;%d\n", userdist[i].username, userdist[i].nome, userdist[i].dist);   
+        }
+        else
+        {
+            printf("%s;%s;%d\n", userdist[i].username, userdist[i].nome, userdist[i].dist);
+        }
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
+    else printf("\n");
 }
 void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -111,9 +126,11 @@ void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     precomedio = preco_medio(driverarray, ridearray, city, NULL, NULL);
     if (precomedio == precomedio)
     {
+        if(interativo == 0)
         fprintf(output, "%.3f\n", precomedio);
+        else printf("%.3f\n\n", precomedio);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
 }
 void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -126,9 +143,11 @@ void query5(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
     precomedio = preco_medio(driverarray, ridearray, NULL, data1, data2);
     if (precomedio == precomedio)
     {
+        if(interativo == 0)
         fprintf(output, "%.3f\n", precomedio);
+        else printf("%.3f\n\n", precomedio);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
 }
 void query6(RIDE *ridearray, RIDE2 *cityviagens, char query[], FILE *output)
 {
@@ -165,9 +184,11 @@ void query6(RIDE *ridearray, RIDE2 *cityviagens, char query[], FILE *output)
     distmedia = soma / counter;
     if (distmedia == distmedia)
     {
+        if(interativo == 0)
         fprintf(output, "%.3f\n", distmedia);
+        else printf("%.3f\n\n", distmedia);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
 }
 void query7(FILE *output, CITYMEDIA *avs, int N)
 {
@@ -178,9 +199,12 @@ void query7(FILE *output, CITYMEDIA *avs, int N)
     }
     for (int i = pos - 1; i >= pos - N; i--)
     {
+        if(interativo == 0)
         fprintf(output, "%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
+        else printf("%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
-    fclose(output);
+    if(interativo == 0) fclose(output);
+    else printf("\n");
 }
 typedef struct
 {
@@ -269,10 +293,13 @@ void query8(char query[], FILE *output, USER *userhash, DRIVER *driverarray, RID
     }
     for (int i = 0; i < pos; i++)
     {
+        if(interativo == 0)
         fprintf(output, "%12.12d;%s;%s;%s\n", genderarr[i].driverid, genderarr[i].namedriver, genderarr[i].user, genderarr[i].nameuser);
+        else printf("%12.12d;%s;%s;%s\n", genderarr[i].driverid, genderarr[i].namedriver, genderarr[i].user, genderarr[i].nameuser);
     }
     free(genderarr);
-    fclose(output);
+    if(interativo == 0) fclose(output);
+    else printf("\n");
 }
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
 {
@@ -350,8 +377,11 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     }
     for (int i = 0; i < pos; i++)
     {
+        if(interativo == 0)
         fprintf(output, "%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_cityride(ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
+        else printf("%12.12d;%s;%d;%s;%.3f\n", ridecity[i].id, get_date(ridearray, ridecity[i].id), get_distance(ridearray, ridecity[i].id), get_cityride(ridearray, ridecity[i].id, "ride"), get_tip(ridearray, ridecity[i].id));
     }
     ridecity = NULL;
-    fclose(output);
+    if(interativo == 0) fclose(output);
+    else printf("\n");
 }
