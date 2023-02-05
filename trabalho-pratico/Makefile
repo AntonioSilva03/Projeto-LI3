@@ -4,7 +4,12 @@ CFLAGS=-Wall -O3 -Iinclude `pkg-config --cflags glib-2.0`
 
 LDFLAGS=`pkg-config --libs glib-2.0` -lm
 
-programa-principal: src/main.o src/calculos.o src/querys.o src/queryscheck.o src/getdriverdata.o src/getridedata.o src/getuserdata.o src/parsedrivers.o src/parserides.o src/parseusers.o src/estatisticas.o src/hashing.o src/interativo.o src/setup.o
+all: programa-principal programa-testes
+
+programa-principal: src/main.o src/calculos.o src/querys.o src/queryscheck.o src/getdriverdata.o src/getridedata.o src/getuserdata.o src/parsedrivers.o src/parserides.o src/parseusers.o src/estatisticas.o src/hashing.o src/interativo.o src/setup.o src/tests.o
+	$(CC) $^ $(LDFLAGS) -o $@
+
+programa-testes: src/main.o src/calculos.o src/querys.o src/queryscheck.o src/getdriverdata.o src/getridedata.o src/getuserdata.o src/parsedrivers.o src/parserides.o src/parseusers.o src/estatisticas.o src/hashing.o src/interativo.o src/setup.o src/tests.o
 	$(CC) $^ $(LDFLAGS) -o $@
 
 src/main.o: src/main.c
@@ -35,9 +40,11 @@ src/interativo.o : src/interativo.c
 
 src/setup.o : src/setup.c
 
+src/tests.o : src/tests.c
+
 PASTA = Resultados
 build_folder := $(shell mkdir -p $(PASTA))
 
 clean:
-	rm -f programa-principal  Resultados/*.txt src/*.o
+	rm -f programa-principal programa-testes Resultados/*.txt src/*.o
 	rmdir Resultados

@@ -13,11 +13,13 @@
 #include "../includes/getuserdata.h"
 #include "../includes/interativo.h"
 #include "../includes/setup.h"
+#include "../includes/tests.h"
 
 int maxuser = 100000;
 int maxdriver = 10000;
 int maxride = 1000000;
 int interativo = 0;
+int testes = 0;
 
 int getquery(char query[])
 {
@@ -35,6 +37,10 @@ int main(int argc, char *argv[])
     FILE *users;
     FILE *drivers;
     FILE *rides;
+    if(strcmp(argv[0], "./programa-testes") == 0)
+    {
+        testes = 1;
+    }
     if (argc == 1)
     {
         interativo = 1;
@@ -132,6 +138,11 @@ int main(int argc, char *argv[])
             strcpy(query, line);
             int queryid = getquery(query);
             handle(userarray, userhash, driverarray, ridearray, queryid, line, output, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
+            if (testes == 1)
+            {
+                FILE *outputtestes = fopen(filepath, "r");
+                compare(outputtestes, argv[3], filename, it);
+            }
             it++;
         }
     }

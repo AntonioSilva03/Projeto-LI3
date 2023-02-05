@@ -96,7 +96,7 @@ void query2(char query[], FILE *output, DRIVERMEDIA *avs, int t)
         else printf("%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
     if(interativo == 0) fclose(output);
-    else printf("\n");
+    else if(interativo == 1)printf("\n");
 }
 void query3(USERDIST *userdist, char query[], FILE* output)
 {
@@ -116,7 +116,7 @@ void query3(USERDIST *userdist, char query[], FILE* output)
         }
     }
     if(interativo == 0) fclose(output);
-    else printf("\n");
+    else if(interativo == 1)printf("\n");
 }
 void query4(DRIVER *driverarray, RIDE *ridearray, char query[], FILE *output)
 {
@@ -204,7 +204,7 @@ void query7(FILE *output, CITYMEDIA *avs, int N)
         else printf("%12.12d;%s;%.3f\n", avs[i].id, avs[i].nome, avs[i].avmedia);
     }
     if(interativo == 0) fclose(output);
-    else printf("\n");
+    else if(interativo == 1)printf("\n");
 }
 typedef struct
 {
@@ -299,7 +299,7 @@ void query8(char query[], FILE *output, USER *userhash, DRIVER *driverarray, RID
     }
     free(genderarr);
     if(interativo == 0) fclose(output);
-    else printf("\n");
+    else if(interativo == 1)printf("\n");
 }
 void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
 {
@@ -383,5 +383,5 @@ void query9(RIDE *ridearray, char query[], FILE *output, RIDE2 *ridecity)
     }
     ridecity = NULL;
     if(interativo == 0) fclose(output);
-    else printf("\n");
+    else if(interativo == 1)printf("\n");
 }
