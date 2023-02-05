@@ -331,17 +331,3 @@ double preco_medio(DRIVER *driverarray, RIDE *ridearray, char *city, char *data1
     }
     return soma / counter;
 }
-double av_mediadrivercity(RIDE *ridearray, int driver, char *city) // q7
-{
-    double soma = 0;
-    int counter = 0;
-    for (int i = 1; i <= maxride; i++)
-    {
-        if (get_driverid(ridearray, i) == driver && strcmp(get_cityride(ridearray, i, "ride"), city) == 0)
-        {
-            soma += get_scoredriver(ridearray, i);
-            counter++;
-        }
-    }
-    return soma / counter;
-}

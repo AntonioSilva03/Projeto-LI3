@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../includes/parserides.h"
+#include "../includes/getridedata.h"
 #include "../includes/structsaux.h"
 #include "../includes/calculos.h"
 #include <ctype.h>
@@ -55,6 +56,17 @@ RIDE *new_ridearray()
     RIDE *ridesarray = malloc(sizeof *ridesarray * (maxride + 1));
     return ridesarray;
 }
+void freeridearray(RIDE *ridearray)
+{
+    for (int i = 0; i <= maxride; i++)
+    {
+        if (rideisnull(ridearray, i) != 0)
+        {
+            free(ridearray[i]);
+        }
+    }
+    free(ridearray);
+}
 int verificacaorides(char *line)
 {
     if (line[0] == ';' || line[13] == ';' || line[38] == ';')
@@ -81,6 +93,7 @@ int verificacaorides(char *line)
             ride->date = strdup(token);
             if (strlen(ride->date) != 10 || ride->date[2] != '/' || ride->date[5] != '/')
             {
+                free(ride->date);
                 free(line);
                 free(ride);
                 return 0;
@@ -90,10 +103,12 @@ int verificacaorides(char *line)
             int year = atoi(ride->date + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(ride->date);
                 free(line);
                 free(ride);
                 return 0;
             }
+            free(ride->date);
         }
         else if (context == 3)
         {
@@ -226,6 +241,7 @@ void parserides(FILE *rides, RIDE *ridesarray, DRIVERMEDIA *drivermedia, DRIVER 
             if (arraypos > 0 && verificacaorides(line) == 0)
             {
                 arraypos++;
+                free(ride);
                 continue;
             }
             int context = 1;

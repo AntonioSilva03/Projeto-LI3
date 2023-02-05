@@ -8,6 +8,7 @@
 typedef struct drivers *DRIVER;
 
 DRIVER *new_driverarray();
+void freedriverarray(DRIVER *driverarray);
 
 void parsedrivers(FILE *drivers, DRIVER *driverarray);
 

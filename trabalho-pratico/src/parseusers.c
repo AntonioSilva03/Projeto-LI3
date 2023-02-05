@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../includes/parseusers.h"
+#include "../includes/getuserdata.h"
 #include "../includes/calculos.h"
 #include "../includes/hashing.h"
 
@@ -21,6 +22,17 @@ USER *new_userarray()
     USER *usersarray = malloc(sizeof *usersarray * (maxuser + 1));
     return usersarray;
 }
+void freeuserarray(USER *userarray)
+{
+    for (int i = 0; i <= maxuser; i++)
+    {
+        if (userisnull(userarray, i) != 0)
+        {
+            free(userarray[i]);
+        }
+    }
+    free(userarray);
+}
 
 int verificacaousers(char *line)
 {
@@ -35,17 +47,18 @@ int verificacaousers(char *line)
     {
         if (context == 1)
         {
-            user->username = strdup(token);
         }
         else if (context == 2)
         {
             user->name = strdup(token);
             if (strlen(user->name) == 0 || user->name[0] == '\0')
             {
+                free(user->name);
                 free(line);
                 free(user);
                 return 0;
             }
+            free(user->name);
         }
         else if (context == 3)
         {
@@ -61,6 +74,7 @@ int verificacaousers(char *line)
             user->birthdate = strdup(token);
             if (strlen(user->birthdate) != 10 || user->birthdate[2] != '/' || user->birthdate[5] != '/')
             {
+                free(user->birthdate);
                 free(line);
                 free(user);
                 return 0;
@@ -70,16 +84,19 @@ int verificacaousers(char *line)
             int year = atoi(user->birthdate + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(user->birthdate);
                 free(line);
                 free(user);
                 return 0;
             }
+            free(user->birthdate);
         }
         else if (context == 5)
         {
             user->accountcreation = strdup(token);
             if (strlen(user->accountcreation) != 10 || user->accountcreation[2] != '/' || user->accountcreation[5] != '/')
             {
+                free(user->accountcreation);
                 free(line);
                 free(user);
                 return 0;
@@ -89,10 +106,12 @@ int verificacaousers(char *line)
             int year = atoi(user->accountcreation + 6);
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1)
             {
+                free(user->accountcreation);
                 free(line);
                 free(user);
                 return 0;
             }
+            free(user->accountcreation);
         }
         else if (context == 6)
         {
@@ -110,10 +129,12 @@ int verificacaousers(char *line)
             char *aux = mystrupr(user->accountstatus);
             if (strcmp(aux, "ACTIVE\n") != 0 && strcmp(aux, "INACTIVE\n") != 0)
             {
+                free(aux);
                 free(line);
                 free(user);
                 return 0;
             }
+            free(aux);
         }
         context++;
         token = strtok(NULL, ";");
@@ -137,6 +158,7 @@ void parseusers(FILE *users, USER *usersarray, USER *userhash)
             {
                 usersarray[arraypos] = NULL;
                 arraypos++;
+                free(user);
                 continue;
             }
             int context = 1;
@@ -180,6 +202,7 @@ void parseusers(FILE *users, USER *usersarray, USER *userhash)
                         user->accountstatus = "inactive\n";
                     }
                     else user->accountstatus = strdup(token);
+                    free(aux);
                 }
                 context++;
                 token = strtok(NULL, ";");

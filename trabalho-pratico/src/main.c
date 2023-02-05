@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
         int sizequery2 = query2est(driverarray, ridearray, drivermedia);
         query3est(userhash, userdist, ridearray);
         query7est(driverarray, ridearray, lisboa, braga, porto, faro, setubal, coimbra, vila_real, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs);
+        menu();
         char line[BUFSIZ];
         printf("\nIntroduza query ou 0 para sair: ");
         while(execucao(line) != NULL)
@@ -105,6 +106,7 @@ int main(int argc, char *argv[])
             handle(userarray, userhash, driverarray, ridearray, queryid, line, NULL, drivermedia, userdist, ride2, sizequery2, lisboaavs, bragaavs, portoavs, faroavs, setubalavs, coimbraavs, vila_realavs, lisboa, braga, porto, faro, setubal, coimbra, vila_real);
         }
         fiminterativo();
+        goto frees;
         return 0;
     }
     setuparraysaux(userhash, userdist, drivermedia);
@@ -133,9 +135,10 @@ int main(int argc, char *argv[])
             it++;
         }
     }
-    free(userarray);
-    free(driverarray);
-    free(ridearray);
+    frees:
+    freeuserarray(userarray);
+    freedriverarray(driverarray);
+    freeridearray(ridearray);
     free(userhash);
     free(drivermedia);
     free(userdist);

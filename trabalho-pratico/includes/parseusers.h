@@ -15,6 +15,7 @@ typedef struct
 } DATA;
 
 USER *new_userarray();
+void freeuserarray(USER *userarray);
 
 void parseusers(FILE *users, USER *userarray, USER *userhash);
 

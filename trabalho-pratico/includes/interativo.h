@@ -5,6 +5,8 @@
 
 void iniciointerativo();
 char *getfilepath();
+void menu();
+void instrucoes();
 char *execucao(char line[]);
 void fiminterativo();
 
