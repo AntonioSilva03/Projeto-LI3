@@ -1,6 +1,4 @@
-<p align="center">
-  <b>Projeto da UC de Laboratórios de Informática III - 2022/2023</b>
-</p>
+## Projeto da UC de Laboratórios de Informática III - 2022/2023
 # Descrição
 Este programa permite executar querys e obter estatísticas sobre um sistema de viagens (tipo Uber) onde existem Utilizadores, Condutores e Viagens.
 # Requisitos para funcionamento
